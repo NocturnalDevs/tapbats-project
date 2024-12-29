@@ -10,8 +10,6 @@ lerna-debug.log*
 # Node modules (for all folders)
 node_modules/
 frontend/node_modules/
-backend/node_modules/
-blockchain/node_modules/
 
 # Build artifacts
 dist/
@@ -19,8 +17,6 @@ dist-ssr/
 frontend/dist/
 frontend/dist-ssr/
 backend/dist/
-blockchain/artifacts/
-blockchain/cache/
 
 # Environment files
 .env

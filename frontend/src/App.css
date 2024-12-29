@@ -1,0 +1,15 @@
+.tap-anim {
+  @apply active:bg-black transform transition-transform duration-100 ease-in-out active:scale-90;
+}
+
+.area-tap-anim {
+  @apply transform transition-transform duration-100 ease-in-out active:scale-x-75 active:scale-y-90;
+}
+
+.eclipse-themed-text {
+  @apply text-[#ff2075];
+}
+
+.eclipse-themed-border {
+  @apply border-t-4 sm:border-t-8 border-[#ca336d] rounded-md;
+}
