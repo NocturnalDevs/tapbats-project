@@ -13,3 +13,16 @@
 .eclipse-themed-border {
   @apply border-t-4 sm:border-t-8 border-[#ca336d] rounded-md;
 }
+
+.eclipse-themed-border-bottom {
+    @apply border-b-4 sm:border-b-8 border-[#ca336d] rounded-md;
+}
+
+@keyframes progress {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+
+.animate-progress {
+    animation: progress 2s linear infinite;
+}

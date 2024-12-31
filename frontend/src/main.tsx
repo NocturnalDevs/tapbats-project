@@ -1,13 +1,13 @@
+import App from './App.tsx';
+import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
-import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter for routing
-import './index.css'; // Import your global styles
+import { AppProvider } from './context/AppProvider.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App /> {/* Wrap your App component with BrowserRouter */}
-    </BrowserRouter>
+      <AppProvider>
+        <App />
+      </AppProvider>
   </React.StrictMode>
 );
