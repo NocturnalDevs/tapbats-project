@@ -45,7 +45,7 @@ function App() {
         <div className="bg-black text-gray-200 | flex flex-col h-screen">
             <Header onNavigate={() => setCurrentView('nocturnal-level-page')} />
 
-            <main className="flex-grow flex flex-col overflow-auto p-4">
+            <main className="flex flex-grow flex-col overflow-auto p-4">
                 {renderView()}
             </main>
 

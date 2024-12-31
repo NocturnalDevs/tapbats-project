@@ -31,10 +31,6 @@ export const StoryProvider = ({ children }: StoryProviderProps) => {
 
     const allStoryPages: StoryPage[] = [
         { pageNumber: 1, pageImage: StoryPage1 },
-        { pageNumber: 2, pageImage: StoryPage1 },
-        { pageNumber: 3, pageImage: StoryPage1 },
-        { pageNumber: 4, pageImage: StoryPage1 },
-        { pageNumber: 5, pageImage: StoryPage1 },
         // Add more pages as needed
     ];
 

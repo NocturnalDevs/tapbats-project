@@ -69,7 +69,7 @@ function Story() {
     }
 
     return (
-        <div className="flex flex-col flex-grow">
+        <div>
             {/* Top Pagination Controls */}
             <PaginationControls
                 position="top"
@@ -87,11 +87,11 @@ function Story() {
                     {`Page ${pageNumber}`}
                 </div>
                 {imageUrl && (
-                    <div className="mt-2 overflow-auto rounded-md">
+                    <div className="mt-2 rounded-md">
                         <img
                             src={imageUrl}
                             alt={`Page ${pageNumber}`}
-                            className="w-full h-fit overflow-auto"
+                            className="w-full h-fit"
                         />
                     </div>
                 )}
