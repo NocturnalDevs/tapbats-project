@@ -1,0 +1,21 @@
+type MinersProps = {
+    setActiveView: (value: 'tap' | 'miners' | 'caverns') => void;
+};
+
+const Miners = ({ setActiveView }: MinersProps) => {
+    return (
+        <div className="flex flex-col h-full p-4">
+            <button
+                className="self-end text-xl font-bold"
+                onClick={() => setActiveView('tap')}
+            >
+                X
+            </button>
+            <div className="flex-grow flex items-center justify-center">
+                <h1 className="text-2xl font-bold">Miners</h1>
+            </div>
+        </div>
+    );
+};
+
+export default Miners

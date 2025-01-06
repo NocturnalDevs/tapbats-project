@@ -1,19 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useStoryContext } from '../context/StoryContext';
+import { useState } from 'react';
 import PaginationControls from '../components/PaginationControls';
 
 function Story() {
-    const { allStoryPages, areAssetsLoaded } = useStoryContext();
     const [pageNumber, setPageNumber] = useState(1);
     const [inputError, setInputError] = useState<string | null>(null);
     const [inputValue, setInputValue] = useState<string>(pageNumber.toString());
+    const [imageLoading, setImageLoading] = useState(true);
 
-    const lastPage = allStoryPages.length;
+    // Placeholder data for story pages
+    const unlockedStoryPages = [
+        // { pageNumber: 1, pageImage: 'https://via.placeholder.com/600x800' },
+    ];
 
-    // Synchronize inputValue with pageNumber
-    useEffect(() => {
-        setInputValue(pageNumber.toString());
-    }, [pageNumber]);
+    const lastPage = unlockedStoryPages.length;
 
     const handleClick = (action: string): void => {
         switch (action) {
@@ -48,28 +47,18 @@ function Story() {
         if (!isNaN(parsedValue)) {
             if (parsedValue > lastPage) {
                 setInputError(`The maximum page number is ${lastPage}.`);
-            }
-            else {
+            } else {
                 setPageNumber(parsedValue);
                 setInputError(null);
             }
         }
     };
 
-    const currentPage = allStoryPages.find((page) => page.pageNumber === pageNumber);
+    const currentPage = unlockedStoryPages.find((page) => page.pageNumber === pageNumber);
     const imageUrl = currentPage ? currentPage.pageImage : null;
 
-    // Show a placeholder while assets are loading
-    if (!areAssetsLoaded) {
-        return (
-            <div className="flex flex-col flex-grow items-center justify-center">
-                <div className="text-gray-500 text-xl font-bold">Loading story...</div>
-            </div>
-        );
-    }
-
     return (
-        <div>
+        <div className="flex flex-col flex-grow overlow-auto">
             {/* Top Pagination Controls */}
             <PaginationControls
                 position="top"
@@ -86,13 +75,24 @@ function Story() {
                 <div className="text-center text-2xl text-gray-500 font-semibold">
                     {`Page ${pageNumber}`}
                 </div>
-                {imageUrl && (
+                {imageUrl ? (
                     <div className="mt-2 rounded-md">
+                        {imageLoading && (
+                            <div className="flex items-center justify-center h-64">
+                                <div className="text-gray-500">Loading image...</div>
+                            </div>
+                        )}
                         <img
                             src={imageUrl}
                             alt={`Page ${pageNumber}`}
                             className="w-full h-fit"
+                            onLoad={() => setImageLoading(false)}
+                            style={{ display: imageLoading ? 'none' : 'block' }}
                         />
+                    </div>
+                ) : (
+                    <div className="mt-2 rounded-md bg-gray-700 flex items-center justify-center h-64">
+                        <div className="text-gray-500">Error loading image.</div>
                     </div>
                 )}
             </div>

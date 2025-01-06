@@ -1,53 +1,129 @@
-import { useState, useEffect } from 'react';
-import { useGemContext } from '../context/GemContext';
-import { useStoryContext } from '../context/StoryContext';
-import { eclipseGem } from '../assets/icons';
-import { preloadImages } from '../utils/imageCache';
-import storyPage1 from "../assets/story/story-page-1.jpeg";
+import { useEffect, useState } from 'react';
 
-const LoadingScreen = () => {
-    const { setAreAssetsLoaded: setGemAssetsLoaded } = useGemContext();
-    const { setAreAssetsLoaded: setStoryAssetsLoaded } = useStoryContext();
-    const [loadingProgress, setLoadingProgress] = useState(0); // Track loading progress
+import {
+  nexusIcon,
+  storyIcon,
+  questsIcon,
+  colonyIcon,
+  walletIcon,
+  eclipseGem,
+} from '../assets/icons';
 
-    useEffect(() => {
-        const preloadAllAssets = async () => {
-            const gemImages = [eclipseGem];
-            const storyImages = [
-                storyPage1,
-            ];
-            const allImages = [...gemImages, ...storyImages];
+import {
+  storyPage1
+} from '../assets/story';
 
-            let loadedCount = 0;
+interface LoadingScreenProps {
+  onLoadComplete: () => void; // Callback when loading is complete
+}
 
-            // Preload images and update progress
-            await preloadImages(allImages, (loaded, total) => {
-                loadedCount = loaded;
-                const progress = Math.round((loaded / total) * 100);
-                setLoadingProgress(progress);
-            });
+const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
+  const [progress, setProgress] = useState(0); // Loading progress (0-100)
+  const [isLoadingComplete, setIsLoadingComplete] = useState(false); // Track if loading is complete
+  const [isTapped, setIsTapped] = useState(false); // Track if the user has tapped the screen
 
-            // Mark assets as loaded
-            if (loadedCount === allImages.length) {
-                setGemAssetsLoaded(true);
-                setStoryAssetsLoaded(true);
+  // List of assets to load (using imported images)
+  const assetsToLoad = [
+    nexusIcon,
+    storyIcon,
+    questsIcon,
+    colonyIcon,
+    walletIcon,
+    eclipseGem,
+
+    storyPage1,
+  ];
+
+  // Cache images using IndexedDB
+  const cacheImages = async (imageUrls: string[]) => {
+    const totalAssets = imageUrls.length;
+    let loadedAssets = 0;
+
+    const promises = imageUrls.map(async (url) => {
+      try {
+        // Check if the image is already cached
+        const cache = await caches.open('image-cache');
+        const cachedResponse = await cache.match(url);
+
+        if (cachedResponse) {
+          // Image is already cached, skip fetching
+          loadedAssets++;
+          setProgress(Math.round((loadedAssets / totalAssets) * 100));
+          return url;
+        }
+
+        // Image is not cached, fetch and cache it
+        const img = new Image();
+        img.src = url;
+        await new Promise((resolve, reject) => {
+          img.onload = async () => {
+            try {
+              const response = await fetch(url);
+              await cache.put(url, response);
+              loadedAssets++;
+              setProgress(Math.round((loadedAssets / totalAssets) * 100));
+              resolve(url);
+            } catch (error) {
+              reject(`Failed to cache image: ${url}`);
             }
-        };
+          };
+          img.onerror = () => reject(`Failed to load image: ${url}`);
+        });
+      } catch (error) {
+        console.error(`Error processing image ${url}:`, error);
+      }
+    });
 
-        preloadAllAssets();
-    }, [setGemAssetsLoaded, setStoryAssetsLoaded]);
+    await Promise.all(promises);
+  };
 
-    return (
-        <div className="flex flex-col items-center justify-center h-screen bg-black text-gray-200">
-            <div className="text-2xl font-bold mb-4">Loading... {loadingProgress}%</div>
-            <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
-                <div
-                    className="h-full bg-blue-500"
-                    style={{ width: `${loadingProgress}%` }} // Dynamically set width
-                ></div>
-            </div>
+  // Load assets on component mount
+  useEffect(() => {
+    const loadAssets = async () => {
+      try {
+        await cacheImages(assetsToLoad);
+        setIsLoadingComplete(true); // Mark loading as complete
+      } catch (error) {
+        console.error('Error loading assets:', error);
+      }
+    };
+
+    loadAssets();
+  }, []);
+
+  // Handle tap to proceed
+  const handleTap = () => {
+    if (isLoadingComplete) {
+      setIsTapped(true);
+      onLoadComplete(); // Notify parent component that loading is complete and user has tapped
+    }
+  };
+
+  return (
+    <div
+      className="loading-screen"
+      onClick={handleTap}
+      style={{
+        backgroundImage: `url(${storyPage1})`, // Use the imported image as the background
+        backgroundSize: 'cover', // Ensure the background covers the entire screen
+        backgroundPosition: 'center', // Center the background image
+      }}
+    >
+      {isLoadingComplete ? (
+        <div className="loading-content">
+          <p className="tap-to-proceed">Tap to proceed</p>
         </div>
-    );
+      ) : (
+        <div className="loading-content">
+          <div className="loading-spinner"></div>
+          <p className="loading-progress">Loading... {progress}%</p>
+          <p className="loading-message">
+            Preparing your adventure... This one-time setup ensures faster launches later!
+          </p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default LoadingScreen;

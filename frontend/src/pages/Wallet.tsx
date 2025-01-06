@@ -5,15 +5,11 @@ import { faWallet } from '@fortawesome/free-solid-svg-icons';
 const Wallet = () => {
     const [walletConnected, setWalletConnected] = useState(false);
 
-    /**
-     * Simulates wallet connection logic.
-     * Replace this with actual TON wallet connection logic.
-     */
     const handleConnectWallet = () => {
         // TODO: Implement actual TON wallet connection logic here
         setWalletConnected(true);
     };
-
+    
     return (
         <div className="flex flex-col items-center justify-center bg-[#121116] text-gray-200 h-screen eclipse-themed-border">
             {/* Wallet Connection */}
