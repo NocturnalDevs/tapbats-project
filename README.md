@@ -63,17 +63,38 @@ To run the game on Telegram, follow these steps:
 
 ## Setting up backend
 
-1. **Navigate to backend** 
+1. **Run this command on the root folder - not backend/fontend** 
     ```bash
-    cd .\backend\src
+    pip install -e .
     ```
 
-2. **Install Dependencies** 
+2. **Navigate to backend** 
+    ```bash
+    cd .\backend
+    ```
+
+3. **Install Dependencies** 
     ```bash
     pip install -r requirements.txt
     ```
 
-3. **Run Backend** 
+4. **Create Tables** 
+    Then run the create_tables.py program
     ```bash
-    uvicorn app.main:app --reload
+    python create_tables.py
     ```
+
+5. **Edit .env on the Backend** 
+    ```bash
+    DATABASE_URL=postgresql://your_username:your_password@localhost/your_database_name
+    ```
+
+6. **Run Backend Server on the root folder** 
+    ```bash
+    cd ..
+    uvicorn backend.app.main:app --reload
+    ```
+
+## list of all API endpoints
+    Open in browser
+    http://localhost:8000/docs

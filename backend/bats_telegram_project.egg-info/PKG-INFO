@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: bats-telegram-project
+Version: 0.1
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: sqlalchemy
+Requires-Dist: psycopg2-binary
+Requires-Dist: pydantic
+Requires-Dist: python-dotenv
+Requires-Dist: websockets
