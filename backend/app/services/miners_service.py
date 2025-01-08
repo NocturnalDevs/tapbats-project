@@ -1,5 +1,5 @@
 from ..database import crud, database
-from ..schemas import miners
+from ..schemes import miner
 
 def create_user_miner(telegramID: str, minerID: int, db: Session = Depends(database.get_db)):
     return crud.create_user_miner(db, telegramID=telegramID, minerID=minerID)

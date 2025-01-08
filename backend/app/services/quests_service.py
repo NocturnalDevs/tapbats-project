@@ -1,5 +1,5 @@
 from ..database import crud, database
-from ..schemas import quests
+from ..schemes import quest
 
 def create_user_quest(telegramID: str, questID: int, db: Session = Depends(database.get_db)):
     return crud.create_user_quest(db, telegramID=telegramID, questID=questID)

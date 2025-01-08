@@ -1,5 +1,5 @@
 from ..database import crud, database
-from ..schemas import caverns
+from ..schemes import cavern
 
 def create_user_cavern(telegramID: str, cavernID: int, db: Session = Depends(database.get_db)):
     return crud.create_user_cavern(db, telegramID=telegramID, cavernID=cavernID)

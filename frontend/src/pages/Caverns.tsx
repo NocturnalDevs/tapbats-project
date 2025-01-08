@@ -1,5 +1,5 @@
 type CavernsProps = {
-    setActiveView: (value: 'tap' | 'miners' | 'caverns') => void;
+    setActiveView: (value: 'tap' | 'upgrades' | 'miners' | 'caverns') => void;
 }
 
 const Caverns = ({ setActiveView }: CavernsProps) => {

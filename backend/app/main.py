@@ -1,30 +1,25 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.database import database
-from app.api.endpoints import user, gems, quests, miners, caverns, story
+from app.database.base import Base
+from app.database.session import engine
+from app.api.user import router as user_router
+from app.api.user_gems import router as user_gems_router
+from app.api.user_socials import router as user_socials_router
+from app.api.user_colony import router as user_colony_router
+from app.api.quest import router as quest_router
+from app.api.miner import router as miner_router
+from app.api.cavern import router as cavern_router
 
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
+# Initialize FastAPI app
 app = FastAPI()
 
-# CORS Middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # Include routers
-app.include_router(user.router, prefix="/api/v1")
-app.include_router(gems.router, prefix="/api/v1")
-app.include_router(quests.router, prefix="/api/v1")
-app.include_router(miners.router, prefix="/api/v1")
-app.include_router(caverns.router, prefix="/api/v1")
-app.include_router(story.router, prefix="/api/v1")
-
-@app.on_event("startup")
-async def startup():
-    await database.connect()
-
-@app.on_event("shutdown")
-async def shutdown():
-    await database.disconnect()
+app.include_router(user_router, prefix="/api")
+app.include_router(user_gems_router, prefix="/api")
+app.include_router(user_socials_router, prefix="/api")
+app.include_router(user_colony_router, prefix="/api")
+app.include_router(quest_router, prefix="/api")
+app.include_router(miner_router, prefix="/api")
+app.include_router(cavern_router, prefix="/api")

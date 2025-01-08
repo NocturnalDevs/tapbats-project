@@ -1,5 +1,5 @@
 from ..database import crud, database
-from ..schemas import gems
+from ..schemes import user_gems
 
 def get_user_gems(telegramID: str, db: Session = Depends(database.get_db)):
     return crud.get_user_gems(db, telegramID=telegramID)
