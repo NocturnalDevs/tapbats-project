@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 // the different views/pages
-import Nexus from './pages/Nexus';
-import Story from './pages/Story';
+import Nexus from './pages/NexusGroup/Nexus';
+import Trade from './pages/Trade';
 import Quests from './pages/Quests';
 import Colony from './pages/Colony';
 import Wallet from './pages/Wallet';
@@ -19,7 +19,7 @@ const App = () => {
     const renderView = () => {
         switch (currentView) {
             case 'Nexus': return <Nexus />;
-            case 'Story': return <Story />;
+            case 'Trade': return <Trade />;
             case 'Quests': return <Quests />;
             case 'Colony': return <Colony />;
             case 'Wallet': return <Wallet />;

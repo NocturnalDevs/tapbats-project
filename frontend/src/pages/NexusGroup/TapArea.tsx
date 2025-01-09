@@ -1,4 +1,4 @@
-import { eclipseGem } from '../assets/icons';
+import { eclipseGem } from '../../assets/icons';
 
 type TapAreaProps = {
     setActiveView: (value: 'tap' | 'upgrades' | 'miners' | 'caverns') => void;
@@ -15,7 +15,7 @@ const TapArea = ({ setActiveView }: TapAreaProps) => {
                 alt="Tap Area Icon"
             />
             <div className="text-gray-500 | text-xl font-bold mt-2">
-                Mine Gems
+                Mine Gems: 500
             </div>
         </button>
     );

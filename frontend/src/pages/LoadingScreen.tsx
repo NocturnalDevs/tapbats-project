@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import {
   nexusIcon,
-  storyIcon,
   questsIcon,
   colonyIcon,
   walletIcon,
@@ -10,8 +9,8 @@ import {
 } from '../assets/icons';
 
 import {
-  storyPage1
-} from '../assets/story';
+    bgPlaceholder
+} from '../assets/images'
 
 interface LoadingScreenProps {
   onLoadComplete: () => void; // Callback when loading is complete
@@ -22,17 +21,18 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
   const [isLoadingComplete, setIsLoadingComplete] = useState(false); // Track if loading is complete
   const [isTapped, setIsTapped] = useState(false); // Track if the user has tapped the screen
 
-  // List of assets to load (using imported images)
-  const assetsToLoad = [
+  // List of static assets to load (icons, etc.)
+  const staticAssetsToLoad = [
     nexusIcon,
-    storyIcon,
     questsIcon,
     colonyIcon,
     walletIcon,
     eclipseGem,
-
-    storyPage1,
+    bgPlaceholder,
   ];
+
+  // Combine static assets and story page assets
+  const allAssetsToLoad = [...staticAssetsToLoad];
 
   // Cache images using IndexedDB
   const cacheImages = async (imageUrls: string[]) => {
@@ -53,22 +53,13 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
         }
 
         // Image is not cached, fetch and cache it
-        const img = new Image();
-        img.src = url;
-        await new Promise((resolve, reject) => {
-          img.onload = async () => {
-            try {
-              const response = await fetch(url);
-              await cache.put(url, response);
-              loadedAssets++;
-              setProgress(Math.round((loadedAssets / totalAssets) * 100));
-              resolve(url);
-            } catch (error) {
-              reject(`Failed to cache image: ${url}`);
-            }
-          };
-          img.onerror = () => reject(`Failed to load image: ${url}`);
-        });
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch image: ${url}`);
+        }
+        await cache.put(url, response);
+        loadedAssets++;
+        setProgress(Math.round((loadedAssets / totalAssets) * 100));
       } catch (error) {
         console.error(`Error processing image ${url}:`, error);
       }
@@ -81,9 +72,10 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
   useEffect(() => {
     const loadAssets = async () => {
       try {
-        await cacheImages(assetsToLoad);
+        await cacheImages(allAssetsToLoad);
         setIsLoadingComplete(true); // Mark loading as complete
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Error loading assets:', error);
       }
     };
@@ -104,7 +96,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
       className="loading-screen"
       onClick={handleTap}
       style={{
-        backgroundImage: `url(${storyPage1})`, // Use the imported image as the background
+        backgroundImage: `url(${bgPlaceholder})`, // Use the first story page as the background
         backgroundSize: 'cover', // Ensure the background covers the entire screen
         backgroundPosition: 'center', // Center the background image
       }}

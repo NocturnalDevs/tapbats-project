@@ -1,16 +1,16 @@
 const NocturnalLevelPage = () => {
     const levels = [
-        { imageSrc: '', name: "Fledgling", minPoints: 0 },
-        { imageSrc: '', name: "Warrior", minPoints: 5000 },
-        { imageSrc: '', name: "Shadow Warrior", minPoints: 25000 },
-        { imageSrc: '', name: "Eclipse Warrior", minPoints: 100000 },
-        { imageSrc: '', name: "Lunar Champion", minPoints: 500000 },
-        { imageSrc: '', name: "Nocturnal Beast", minPoints: 2000000 },
-        { imageSrc: '', name: "Nightfall Guardian", minPoints: 10000000 },
-        { imageSrc: '', name: "Starlight Guardian", minPoints: 50000000 },
-        { imageSrc: '', name: "Eclipse Titan", minPoints: 100000000 },
-        { imageSrc: '', name: "Shadow Lord", minPoints: 500000000 },
-        { imageSrc: '', name: "Void Reaver", minPoints: 1000000000 },
+        { imageSrc: '', name: "Fledgling", minGems: 0 },
+        { imageSrc: '', name: "Warrior", minGems: 5000 },
+        { imageSrc: '', name: "Shadow Warrior", minGems: 25000 },
+        { imageSrc: '', name: "Eclipse Warrior", minGems: 100000 },
+        { imageSrc: '', name: "Lunar Champion", minGems: 500000 },
+        { imageSrc: '', name: "Nocturnal Beast", minGems: 2000000 },
+        { imageSrc: '', name: "Nightfall Guardian", minGems: 10000000 },
+        { imageSrc: '', name: "Starlight Guardian", minGems: 50000000 },
+        { imageSrc: '', name: "Eclipse Titan", minGems: 100000000 },
+        { imageSrc: '', name: "Shadow Lord", minGems: 500000000 },
+        { imageSrc: '', name: "Void Reaver", minGems: 1000000000 },
     ];
 
     return (
@@ -38,7 +38,7 @@ const NocturnalLevelPage = () => {
                         <span className="text-lg font-semibold mt-2">{level.name}</span>
 
                         {/* Level Points */}
-                        <span className="text-sm mt-1">{level.minPoints.toLocaleString()} Points</span>
+                        <span className="text-sm mt-1 text-center">{level.minGems.toLocaleString()} Nocturnal Coins (NTC)</span>
                     </div>
                 ))}
             </div>

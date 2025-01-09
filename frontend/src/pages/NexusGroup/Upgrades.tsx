@@ -12,7 +12,7 @@ const Upgrades = ({ setActiveView }: UpgradesProps) => {
                 X
             </button>
             <div className="flex-grow flex items-center justify-center">
-                <h1 className="text-2xl font-bold">Upgrades</h1>
+                <h1 className="text-2xl font-bold">Coming Soon</h1>
             </div>
         </div>
     );

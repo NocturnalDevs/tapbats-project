@@ -1,8 +1,8 @@
-type MinersProps = {
+type CavernsProps = {
     setActiveView: (value: 'tap' | 'upgrades' | 'miners' | 'caverns') => void;
-};
+}
 
-const Miners = ({ setActiveView }: MinersProps) => {
+const Caverns = ({ setActiveView }: CavernsProps) => {
     return (
         <div className="flex flex-col h-full p-4">
             <button
@@ -12,10 +12,10 @@ const Miners = ({ setActiveView }: MinersProps) => {
                 X
             </button>
             <div className="flex-grow flex items-center justify-center">
-                <h1 className="text-2xl font-bold">Miners</h1>
+                <h1 className="text-2xl font-bold">Coming Soon</h1>
             </div>
         </div>
     );
-};
+}
 
-export default Miners
+export default Caverns

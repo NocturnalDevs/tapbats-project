@@ -1,4 +1,4 @@
-import { nexusIcon, storyIcon, questsIcon, colonyIcon, walletIcon } from '../assets/icons';
+import { nexusIcon, questsIcon, colonyIcon, walletIcon } from '../assets/icons';
 
 // prop type that App.tsx needs to pass
 interface FooterProps {
@@ -10,7 +10,7 @@ interface FooterProps {
 const Footer = ({ currentView, clickedButton, handleClick }: FooterProps) => {
     return (
         <footer className="bg-[#121116] eclipse-themed-border">
-            <div className='flex flex-row flex-wrap justify-between | mx-2 sm:mx-4 p-2 sm:p-0'>
+            <div className='flex flex-row flex-wrap justify-between | mx-8 sm:mx-4 p-2 sm:p-0'>
                 {/* Navigation Buttons */}
                 <NavButton
                     view="Nexus"
@@ -20,11 +20,11 @@ const Footer = ({ currentView, clickedButton, handleClick }: FooterProps) => {
                     onClick={() => handleClick('Nexus')}
                 />
                 <NavButton
-                    view="Story"
-                    iconSrc={storyIcon}
+                    view="Trade"
+                    iconSrc={questsIcon}
                     currentView={currentView}
                     clickedButton={clickedButton}
-                    onClick={() => handleClick('Story')}
+                    onClick={() => handleClick('Trade')}
                 />
                 <NavButton
                     view="Quests"

@@ -10,7 +10,7 @@ const Quests = () => {
     ];
 
     const specialQuests = [
-        // { name: 'Follow on Twitter', gems: 20, completed: false, link: '#' },
+        { name: 'Follow on Twitter', gems: 20, completed: false, link: 'https://x.com/DevsNocturnia?t=AqOEAtnLAOynBrIH2Icxrg&s=09' },
     ];
 
     const renderQuests = () => {

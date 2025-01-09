@@ -5,7 +5,7 @@ function Colony() {
     const [copied, setCopied] = useState(false);
     const referralCode = 'Coming Soon'; // Placeholder referral code
     const members = [
-        //{ id: '1', name: 'Alice' },
+        // { id: '1', name: 'Name' },
     ];
 
     // Handle copying referral code
