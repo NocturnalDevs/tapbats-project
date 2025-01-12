@@ -4,9 +4,9 @@ type MinersProps = {
 
 const Miners = ({ setActiveView }: MinersProps) => {
     return (
-        <div className="flex flex-col h-full p-4">
+        <div className="flex flex-col | h-full p-4">
             <button
-                className="self-end text-xl font-bold"
+                className="self-end | text-xl font-bold"
                 onClick={() => setActiveView('tap')}
             >
                 X
@@ -18,4 +18,4 @@ const Miners = ({ setActiveView }: MinersProps) => {
     );
 };
 
-export default Miners
+export default Miners;

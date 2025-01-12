@@ -3,45 +3,44 @@ import { useState } from 'react';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-// the different views/pages
 import Nexus from './pages/NexusGroup/Nexus';
 import Trade from './pages/Trade';
 import Quests from './pages/Quests';
 import Colony from './pages/Colony';
 import Wallet from './pages/Wallet';
+import Leaderboard from './pages/Leaderboard';
 import NocturnalLevelPage from './pages/NocturnalLevel';
 
 const App = () => {
-    const [currentView, setCurrentView] = useState('Nexus'); // sets the main view (nexus, story, quests, colony, wallet, nocturnal page)
-    const [clickedButton, setClickedButton] = useState<string | null>('Nexus'); // for animation purposes
+    const [currentView, setCurrentView] = useState('Nexus');
+    const [clickedButton, setClickedButton] = useState<string | null>('Nexus');
 
-    // the different views/pages navigated by using the footer navigational buttons - and the header (for NocturnalLevelPage)
+    const handleClick = (view: string): void => {
+        setCurrentView(view);
+        setClickedButton(view);
+        setTimeout(() => setClickedButton(null), 300);
+    };
+
     const renderView = () => {
         switch (currentView) {
-            case 'Nexus': return <Nexus />;
+            case 'Nexus': return <Nexus handleClick={handleClick}/>;
             case 'Trade': return <Trade />;
             case 'Quests': return <Quests />;
             case 'Colony': return <Colony />;
             case 'Wallet': return <Wallet />;
             case 'Nocturnal-Level-Page': return <NocturnalLevelPage />;
-            default: return <Nexus />;
+            case 'Leaderboard': return <Leaderboard />;
+            default: return <Nexus handleClick={handleClick}/>;
         }
     };
 
-    // changes the view and toggles the animation for that button
-    const handleClick = (view: string): void => {
-        setCurrentView(view);
-        setClickedButton(view); // for animation purposes
-        setTimeout(() => setClickedButton(null), 300); // for animation purposes
-    };
-    
     return (
-        <div className="bg-black text-gray-200 | flex flex-col h-screen">
-            <Header
-                handleClick={handleClick} 
+        <div className="bg-black text-gray-100 | flex flex-col h-screen">
+            <Header 
+                handleClick={handleClick}
             />
 
-            <main className="flex flex-grow flex-col overflow-auto p-4">
+            <main className="flex flex-grow flex-col | overflow-auto p-4">
                 {renderView()}
             </main>
             
@@ -52,6 +51,6 @@ const App = () => {
             />
         </div>
     );
-}
+};
 
 export default App;

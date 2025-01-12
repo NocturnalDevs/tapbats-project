@@ -1,14 +1,13 @@
 import './index.css';
 
-import App from './App.tsx';
-import LoadingScreen from './pages/LoadingScreen.tsx';
+import App from './App';
+import LoadingScreen from './pages/LoadingScreen';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
 const Root = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Callback when loading is complete
   const handleLoadComplete = () => {
     setIsLoading(false);
   };
@@ -24,4 +23,12 @@ const Root = () => {
   );
 };
 
-ReactDOM.createRoot(document.getElementById('root')!).render(<Root />);
+// Use non-null assertion (!) to ensure the element exists
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(<Root />);
+}
+else {
+  console.error('Root element not found');
+}

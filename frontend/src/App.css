@@ -1,13 +1,17 @@
 .tap-anim {
-  @apply active:bg-black transform transition-transform duration-100 ease-in-out active:scale-90;
+  @apply active:bg-black transform transition-transform duration-75 ease-in-out active:scale-90;
 }
 
 .area-tap-anim {
-  @apply transform transition-transform duration-100 ease-in-out active:scale-x-75 active:scale-y-90;
+  @apply transform transition-transform duration-75 ease-in-out active:scale-x-75 active:scale-y-90;
 }
 
 .eclipse-themed-text {
-  @apply text-[#ff2075];
+  @apply text-[#ca336d];
+}
+
+.dark-gray-color {
+  @apply bg-[#121116]
 }
 
 .eclipse-themed-border {
@@ -19,78 +23,78 @@
 }
 
 .loading-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    cursor: pointer; /* Indicate that the screen is clickable */
-    text-align: center; /* Center-align text */
-    background-color: #1a1a1a; /* Fallback background color */
-    background-image: url('./assets/story/story-page-1.jpeg'); /* Placeholder for background image */
-    background-size: cover; /* Ensure the background covers the entire screen */
-    background-position: center; /* Center the background image */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  cursor: pointer; /* Indicate that the screen is clickable */
+  text-align: center; /* Center-align text */
+  background-color: #1a1a1a; /* Fallback background color */
+  background-image: url('./assets/images/background_placeholder.jpeg'); /* Placeholder for background image */
+  background-size: cover; /* Ensure the background covers the entire screen */
+  background-position: center; /* Center the background image */
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; /* Space between elements */
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background for better readability */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .loading-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px; /* Space between elements */
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background for better readability */
-    border-radius: 10px; /* Rounded corners */
+  100% {
+    transform: rotate(360deg);
   }
-  
-  .loading-spinner {
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid #fff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
+}
+
+.loading-progress {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.loading-message {
+  font-size: 1rem;
+  color: #ddd; /* Light gray for better readability */
+  max-width: 300px; /* Limit width for better readability */
+  line-height: 1.5; /* Improve line spacing */
+}
+
+.tap-to-proceed {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  animation: pulse 1.5s infinite; /* Add a subtle pulse animation */
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
   }
-  
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+  50% {
+    opacity: 0.7;
   }
-  
-  .loading-progress {
-    font-size: 1.2rem;
-    font-weight: bold;
+  100% {
+    opacity: 1;
   }
-  
-  .loading-message {
-    font-size: 1rem;
-    color: #ddd; /* Light gray for better readability */
-    max-width: 300px; /* Limit width for better readability */
-    line-height: 1.5; /* Improve line spacing */
-  }
-  
-  .tap-to-proceed {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #fff;
-    animation: pulse 1.5s infinite; /* Add a subtle pulse animation */
-  }
-  
-  @keyframes pulse {
-    0% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.7;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+}

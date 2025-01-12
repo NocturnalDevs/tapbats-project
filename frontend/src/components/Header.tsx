@@ -9,22 +9,23 @@ const Header = ({ handleClick }: HeaderProps) => {
     const nocturnalLevel = "Fledgling";
 
     return (
-        <button 
-            className="bg-[#121116] | flex flex-col items-center | py-4 sm:py-8 | tap-anim eclipse-themed-border-bottom"
-            onClick={() => handleClick('Nocturnal-Level-Page')} // Changes the view to nocturnal level when pressed
-        >
-            {/* top elements */}
-            <div className="flex items-center justify-center | mb-2 sm:mb-4 px-4 space-x-4">
-                <img src={eclipseGem} alt="Eclipse Gem" className="h-10 w-10 sm:h-16 sm:w-16" />
-                <div className="text-3xl sm:text-6xl font-bold">{gemCount}</div>
-                <div className="text-sm sm:text-2xl">Eclipse Gems</div>
-            </div>
-
-            {/* bottom elements */}
-            <div className="text-lg sm:text-3xl | font-semibold eclipse-themed-text">
-                {nocturnalLevel} {" >"}
-            </div>
-        </button>
+        <div className='flex flex-col'>
+            <button
+                className="dark-gray-color | flex flex-col items-center | tap-anim eclipse-themed-border-bottom | py-4"
+                onClick={() => handleClick('Nocturnal-Level-Page')}
+            >
+                {/* Gem Icon, User Total Gems, 'Eclipse Gems' */}
+                <div className="flex flex-wrap items-center justify-center | mb-1 px-4 space-x-4">
+                    <img src={eclipseGem} alt="Eclipse Gem" className="h-10 w-10"/>
+                    <div className="text-3xl font-bold">{gemCount}</div>
+                    <div className="text-sm">Eclipse Gems</div>
+                </div>
+                
+                <div className="text-lg | font-bold eclipse-themed-text">
+                    {nocturnalLevel} {" >"}
+                </div>
+            </button>
+        </div>
     );
 };
 

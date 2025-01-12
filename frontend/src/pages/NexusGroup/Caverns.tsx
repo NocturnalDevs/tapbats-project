@@ -1,12 +1,12 @@
 type CavernsProps = {
     setActiveView: (value: 'tap' | 'upgrades' | 'miners' | 'caverns') => void;
-}
+};
 
 const Caverns = ({ setActiveView }: CavernsProps) => {
     return (
-        <div className="flex flex-col h-full p-4">
+        <div className="flex flex-col | h-full p-4">
             <button
-                className="self-end text-xl font-bold"
+                className="self-end | text-xl font-bold"
                 onClick={() => setActiveView('tap')}
             >
                 X
@@ -16,6 +16,6 @@ const Caverns = ({ setActiveView }: CavernsProps) => {
             </div>
         </div>
     );
-}
+};
 
-export default Caverns
+export default Caverns;

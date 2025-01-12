@@ -2,7 +2,7 @@ import { eclipseGem } from '../../assets/icons';
 
 type TapAreaProps = {
     setActiveView: (value: 'tap' | 'upgrades' | 'miners' | 'caverns') => void;
-}
+};
 
 const TapArea = ({ setActiveView }: TapAreaProps) => {
     return (
@@ -10,7 +10,7 @@ const TapArea = ({ setActiveView }: TapAreaProps) => {
             className={`flex flex-col flex-grow items-center justify-center | mt-4 area-tap-anim`}
         >
             <img
-                className="h-64 w-64"
+                className="h-52 w-52"
                 src={eclipseGem}
                 alt="Tap Area Icon"
             />
@@ -19,6 +19,6 @@ const TapArea = ({ setActiveView }: TapAreaProps) => {
             </div>
         </button>
     );
-}
+};
 
-export default TapArea
+export default TapArea;
