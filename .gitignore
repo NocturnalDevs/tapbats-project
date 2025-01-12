@@ -19,6 +19,7 @@ frontend/dist-ssr/
 backend/dist/
 
 # Environment files
+myenv/
 .env
 .env.local
 .env.development
@@ -41,3 +42,9 @@ Thumbs.db
 
 # Dependency directories (if using pnpm or similar)
 .pnpm-store/" > bats-telegram-project/.gitignore
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

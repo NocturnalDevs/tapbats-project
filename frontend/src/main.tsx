@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom/client';
 
 const Root = () => {
   const [isLoading, setIsLoading] = useState(true);
-
+  
   const handleLoadComplete = () => {
     setIsLoading(false);
   };

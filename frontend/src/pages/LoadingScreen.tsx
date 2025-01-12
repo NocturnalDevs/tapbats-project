@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import SDK from '@twa-dev/sdk'; // Correct import (default import)
 import { nexusIcon, questsIcon, colonyIcon, walletIcon, eclipseGem } from '../assets/icons';
 import { bgPlaceholder } from '../assets/images';
+
+import SDK from '@twa-dev/sdk';
 
 type TelegramUserInfo = {
     id: number;
@@ -10,7 +11,7 @@ type TelegramUserInfo = {
     username?: string;
     language_code?: string;
     is_premium?: boolean;
-}
+};
 
 interface LoadingScreenProps {
     onLoadComplete: () => void;
@@ -24,17 +25,63 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
     const [isTelegram, setIsTelegram] = useState<boolean>(false);
     const [telegramUser, setTelegramUser] = useState<TelegramUserInfo | null>(null);
 
-    // Check if the app is running in Telegram and get the user's Telegram info
     useEffect(() => {
         if (SDK.initDataUnsafe.user) {
             setIsTelegram(true);
             const user = SDK.initDataUnsafe.user;
             setTelegramUser(user);
-        } else {
+        }
+        else {
             setLoadError('This game can only be played within Telegram.');
         }
     }, []);
 
+    const checkUserExists = async (userId: number) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/user-exists/${userId}`);
+            if (!response.ok) throw new Error('Failed to check user existence');
+            const data = await response.json();
+            return data.exists;
+        }
+        catch (error) {
+            console.error('Error checking user existence:', error);
+            return false;
+        }
+    };
+    
+    const saveUserToBackend = async (user: TelegramUserInfo) => {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/save-user/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user),
+            });
+            if (!response.ok) throw new Error('Failed to save user info');
+            const data = await response.json();
+            console.log(data.message);
+        }
+        catch (error) {
+            console.error('Error saving user info:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (telegramUser) {
+            const saveUser = async () => {
+                const exists = await checkUserExists(telegramUser.id);
+                if (!exists) {
+                    await saveUserToBackend(telegramUser);
+                }
+                else {
+                    console.log('User already exists in the database');
+                }
+            };
+            saveUser();
+        }
+    }, [telegramUser]);
+    
     const staticAssetsToLoad = [nexusIcon, questsIcon, colonyIcon, walletIcon, eclipseGem, bgPlaceholder];
 
     const cacheImages = async (imageUrls: string[]) => {
