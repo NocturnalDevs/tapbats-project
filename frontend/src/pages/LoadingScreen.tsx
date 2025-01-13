@@ -24,64 +24,99 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
     const [loadError, setLoadError] = useState<string | null>(null);
     const [isTelegram, setIsTelegram] = useState<boolean>(false);
     const [telegramUser, setTelegramUser] = useState<TelegramUserInfo | null>(null);
+    const [referralCode, setReferralCode] = useState('');
+    const [showReferralInput, setShowReferralInput] = useState(false);
 
+    // Step 1: Check if the game is opened on Telegram
     useEffect(() => {
         if (SDK.initDataUnsafe.user) {
             setIsTelegram(true);
             const user = SDK.initDataUnsafe.user;
             setTelegramUser(user);
-        }
-        else {
-            setLoadError('This game can only be played within Telegram.');
+        } else {
+            setLoadError('Game must be opened on Telegram.');
         }
     }, []);
 
+    // Step 2: Check if the user exists in the database
     const checkUserExists = async (userId: number) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/user-exists/${userId}`);
             if (!response.ok) throw new Error('Failed to check user existence');
             const data = await response.json();
             return data.exists;
-        }
-        catch (error) {
+        } catch (error) {
             console.error('Error checking user existence:', error);
             return false;
         }
     };
-    
-    const saveUserToBackend = async (user: TelegramUserInfo) => {
+
+    useEffect(() => {
+        if (telegramUser) {
+            const checkUser = async () => {
+                const exists = await checkUserExists(telegramUser.id);
+                if (!exists) {
+                    setShowReferralInput(true); // Show referral input if user doesn't exist
+                } else {
+                    // Proceed to cache assets if user exists
+                    cacheImages(staticAssetsToLoad);
+                }
+            };
+            checkUser();
+        }
+    }, [telegramUser]);
+
+    // Handle referral code submission
+    const handleReferralCodeSubmit = async () => {
+        if (!referralCode) {
+            setLoadError('Please enter a referral code.');
+            return;
+        }
+
+        const isValid = await validateReferralCode(referralCode);
+        if (isValid && telegramUser) {
+            await saveUserToBackend(telegramUser, referralCode);
+            // After saving user, proceed to cache assets
+            cacheImages(staticAssetsToLoad);
+        }
+    };
+
+    const validateReferralCode = async (code: string) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/validate-referral-code/${code}`);
+            if (!response.ok) throw new Error('Invalid referral code');
+            return true;
+        } catch (error) {
+            console.error('Error validating referral code:', error);
+            setLoadError('Invalid referral code. Please try again.');
+            return false;
+        }
+    };
+
+    const saveUserToBackend = async (user: TelegramUserInfo, referralCode: string) => {
         try {
             const response = await fetch('http://127.0.0.1:8000/save-user/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user),
+                body: JSON.stringify({ ...user, referral_code: referralCode }),
             });
             if (!response.ok) throw new Error('Failed to save user info');
             const data = await response.json();
             console.log(data.message);
-        }
-        catch (error) {
+        } catch (error) {
             console.error('Error saving user info:', error);
+            setLoadError('Failed to save user info. Please try again.');
         }
     };
 
-    useEffect(() => {
-        if (telegramUser) {
-            const saveUser = async () => {
-                const exists = await checkUserExists(telegramUser.id);
-                if (!exists) {
-                    await saveUserToBackend(telegramUser);
-                }
-                else {
-                    console.log('User already exists in the database');
-                }
-            };
-            saveUser();
-        }
-    }, [telegramUser]);
-    
+    const handleRetry = () => {
+        setLoadError(null); // Clear the error message
+        setShowReferralInput(true); // Show the referral input again
+    };
+
+    // Step 3: Cache assets locally
     const staticAssetsToLoad = [nexusIcon, questsIcon, colonyIcon, walletIcon, eclipseGem, bgPlaceholder];
 
     const cacheImages = async (imageUrls: string[]) => {
@@ -107,54 +142,66 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             });
 
             await Promise.all(promises);
-            setIsLoadingComplete(true);
-        }
-        catch (error) {
+            setIsLoadingComplete(true); // Mark loading as complete
+        } catch (error) {
             console.error('Error loading assets:', error);
             setLoadError('Failed to load assets. Please refresh the page.');
         }
     };
 
-    useEffect(() => {
-        if (isTelegram) {
-            cacheImages(staticAssetsToLoad); // Only load assets if the app is running in Telegram
-        }
-    }, [isTelegram]);
-
+    // Handle click to proceed
     const handleClick = () => {
-        if (isLoadingComplete && isTelegram) {
-            setIsTapped(true);
-            onLoadComplete();
-        }
+        if (!isLoadingComplete || !isTelegram) return; // Prevent proceeding if loading is not complete or not in Telegram
+        setIsTapped(true);
+        onLoadComplete();
     };
 
     return (
         <div
-            className="loading-screen"
+            className="text-gray-100 | flex flex-col items-center justify-center text-center | h-screen w-screen | cursor-pointer bg-cover bg-center"
             style={{ backgroundImage: `url(${bgPlaceholder})` }}
             onClick={handleClick}
         >
-            <div className="loading-content">
+            <div className="flex flex-col items-center justify-center | p-2 m-4 | bg-[#121116] bg-opacity-90 | rounded-md">
                 {loadError ? (
-                    <div className="text-red-500 text-center">
+                    <div className="flex flex-col | justify-center items-center text-center m-2 | font-bold eclipse-themed-text">
                         {loadError}
                         {!isTelegram && (
-                            <p className="mt-4">
+                            <p className="mt-2 text-gray-100 font-normal">
                                 Please open this game in Telegram to continue.
                             </p>
                         )}
                         {isTelegram && (
                             <button
-                                onClick={() => window.location.reload()}
-                                className="bg-[#ca336d] text-white px-4 py-2 rounded-md mt-4 tap-anim"
+                                onClick={handleRetry}
+                                className="eclipse-themed-button | p-2 mt-2 rounded-md | tap-anim"
                             >
                                 Retry
                             </button>
                         )}
                     </div>
+                ) : showReferralInput ? (
+                    <div>
+                        <p>Please enter a referral code to join the game:</p>
+                        <input
+                            type="text"
+                            value={referralCode}
+                            onChange={(e) => setReferralCode(e.target.value)}
+                            placeholder="X3Y2Z1"
+                            className="text-gray-800 | p-2 m-2 rounded-md text-center"
+                        />
+                        <button
+                            onClick={handleReferralCodeSubmit}
+                            className="eclipse-themed-button | p-2 m-2 rounded-md | tap-anim"
+                        >
+                            Submit
+                        </button>
+                    </div>
                 ) : isLoadingComplete ? (
                     <>
-                        <p className="tap-to-proceed">Tap to proceed</p>
+                        <p className="text-2xl font-bold text-gray-800 animate-pulse">
+                            Tap to proceed
+                        </p>
                         {telegramUser && (
                             <div className="telegram-user-info mt-4">
                                 <h3 className="text-lg font-bold">User Info:</h3>

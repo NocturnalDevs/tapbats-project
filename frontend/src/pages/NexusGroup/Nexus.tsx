@@ -31,7 +31,9 @@ const Nexus = ({ handleClick }: NexusProps) => {
     return (
         <div className="flex flex-col | h-screen overflow-clip">
             {/* Leaderboard */}
-            
+            <Ranking
+                handleClick={handleClick}
+            />
 
             {/* Dynamic View */}
             {renderView()}
