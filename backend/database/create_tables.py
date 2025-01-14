@@ -1,5 +1,5 @@
-from database.connection import engine, Base
-from database.models import (
+from backend.database.connection import engine, Base
+from backend.database.models import (
     UserTable, UserFundsTable, UserTapMiningTable, CavernTable, MinerTable,
     UserCavernTable, UserMinerTable, UserSocialsTable, QuestTable,
     UserQuestTable, UserElderTable, UserMembersTable
