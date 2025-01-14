@@ -59,11 +59,8 @@ To run the game on Telegram, follow these steps:
 
 ## Setting Up the Backend
 
-1. **Navigate to the Backend Directory**
-   Open a terminal and navigate to the `backend` directory of the project:
-   ```bash
-   cd tapbats-project/backend
-   ```
+1. **Navigate to the Root Directory**
+   Open a terminal and navigate to the root directory of the project:
 
 2. **Create a Virtual Environment**
    Create a new virtual environment (venv) to isolate the backend dependencies:
@@ -77,13 +74,19 @@ To run the game on Telegram, follow these steps:
    myenv\Scripts\activate
    ```
 
-4. **Install Required Python Packages**
+5. **Navigate to the Backend Directory**
+   Navigate to the backend directory of the project:
+   ```bash
+   cd backend
+   ```
+
+6. **Install Required Python Packages**
    Install the dependencies listed in the `requirements.txt` file:
    ```bash
    pip install -r requirements.txt
    ```
 
-5. **Set Up Environment Variables**
+7. **Set Up Environment Variables**
    Create a `.env` file in the `backend` directory to store sensitive or machine-specific configurations (e.g., database connection details):
    ```bash
    New-Item -Path .env -ItemType File
@@ -94,7 +97,7 @@ To run the game on Telegram, follow these steps:
    DATABASE_URL=postgresql://your_username:your_password@localhost:5432/your_database
    ```
 
-6. **Run the Backend Server**
+8. **Run the Backend Server**
    Start the FastAPI backend server:
    ```bash
    uvicorn main:app --reload
@@ -105,7 +108,7 @@ To run the game on Telegram, follow these steps:
    http://localhost:8000/docs
    ```
 
-7. **Update requirements.txt (Optional)**
+9. **Update requirements.txt (Optional)**
    When new packages are added to the project, update the requirements.txt file by running: 
    ```bash
    pip freeze > requirements.txt

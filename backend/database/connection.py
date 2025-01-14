@@ -6,7 +6,11 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import logging
 
-load_dotenv()
+# Print the current working directory
+print("Current Working Directory:", os.getcwd())
+
+# Load the .env file from the parent directory
+load_dotenv("../.env")  # Adjust the path if needed
 
 # Load DATABASE_URL from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL")

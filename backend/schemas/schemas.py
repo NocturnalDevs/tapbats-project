@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional
 from enum import Enum
@@ -34,8 +34,7 @@ class User(UserBase):
     overall_time_played: float
     banned: bool
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Funds Schema
 class UserFundsBase(BaseModel):
@@ -53,8 +52,7 @@ class UserFunds(UserFundsBase):
     highest_ntc_count: float
     overall_ntc_count: float
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Tap Mining Schema
 class UserTapMiningBase(BaseModel):
@@ -68,8 +66,7 @@ class UserTapMining(UserTapMiningBase):
     daily_gems_amount: float
     mining_level: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Socials Schema
 class UserSocialsBase(BaseModel):
@@ -90,8 +87,7 @@ class UserSocials(UserSocialsBase):
     instagram_follow_verified: VerificationStatus
     telegram_follow_verified: VerificationStatus
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Quests Schema
 class QuestBase(BaseModel):
@@ -109,8 +105,7 @@ class QuestCreate(QuestBase):
 class Quest(QuestBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserQuestBase(BaseModel):
     telegram_id: str
@@ -123,8 +118,7 @@ class UserQuest(UserQuestBase):
     id: int
     status: QuestStatus
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Elder Schema
 class UserElderBase(BaseModel):
@@ -138,8 +132,7 @@ class UserElderCreate(UserElderBase):
 class UserElder(UserElderBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Members Schema
 class UserMembersBase(BaseModel):
@@ -153,8 +146,7 @@ class UserMembersCreate(UserMembersBase):
 class UserMembers(UserMembersBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Cavern Schema
 class CavernBase(BaseModel):
@@ -168,8 +160,7 @@ class CavernCreate(CavernBase):
 class Cavern(CavernBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserCavernBase(BaseModel):
     telegram_id: str
@@ -182,8 +173,7 @@ class UserCavern(UserCavernBase):
     id: int
     purchased: bool
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Miner Schema
 class MinerBase(BaseModel):
@@ -198,8 +188,7 @@ class MinerCreate(MinerBase):
 class Miner(MinerBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserMinerBase(BaseModel):
     telegram_id: str
@@ -212,5 +201,4 @@ class UserMiner(UserMinerBase):
     id: int
     level: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
