@@ -1,4 +1,4 @@
-echo "# Logs
+# Logs
 logs
 *.log
 npm-debug.log*
@@ -41,7 +41,7 @@ myenv/
 Thumbs.db
 
 # Dependency directories (if using pnpm or similar)
-.pnpm-store/" > bats-telegram-project/.gitignore
+.pnpm-store/
 
 # Python cache files
 __pycache__/

@@ -86,12 +86,12 @@ To run the game on Telegram, follow these steps:
 5. **Set Up Environment Variables**
    Create a `.env` file in the `backend` directory to store sensitive or machine-specific configurations (e.g., database connection details):
    ```bash
-   touch .env
+   New-Item -Path .env -ItemType File
    ```
 
    Add the following content to the `.env` file (replace the values with your actual database credentials):
    ```plaintext
-   DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/telegram_game_db
+   DATABASE_URL=postgresql://your_username:your_password@localhost:5432/your_database
    ```
 
 6. **Run the Backend Server**
@@ -110,6 +110,20 @@ To run the game on Telegram, follow these steps:
    ```bash
    pip freeze > requirements.txt
    ```
+
+---
+
+## Create tables on Postgresql
+
+1. **Navigate to the Root of Your Project**
+   Open a terminal and navigate to the root of your project (bats-telegram-project/).
+
+1. **Run the Script**
+   Use the following command to run create_tables.py:
+   ```bash
+   python backend/database/create_tables.py
+   ```
+
 ---
 
 ### Notes:
