@@ -28,7 +28,6 @@ export const validateReferralCode = async (code: string): Promise<boolean> => {
 export const saveUserToBackend = async (user: {
     telegram_id: string;
     username: string;
-    referral_code: string;
 }): Promise<void> => {
     try {
         const response = await fetch('http://127.0.0.1:8000/api/save-user/', {

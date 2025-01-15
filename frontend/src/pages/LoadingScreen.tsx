@@ -71,14 +71,15 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             setLoadError('Please enter a referral code.');
             return;
         }
-
+    
         try {
+            // Validate the referral code
             const isValid = await validateReferralCode(referralCode);
             if (isValid && telegramUser) {
+                // Save the user (backend will generate a referral code)
                 await saveUserToBackend({
                     telegram_id: telegramUser.id.toString(),
                     username: telegramUser.username || telegramUser.first_name,
-                    referral_code: referralCode,
                 });
                 cacheImages(staticAssetsToLoad); // Proceed to cache assets after saving the user
             }

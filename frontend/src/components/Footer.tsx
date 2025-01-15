@@ -41,6 +41,7 @@ const Footer = ({ currentView, clickedButton, handleClick }: FooterProps) => {
                     clickedButton={clickedButton}
                     onClick={() => handleClick('Nexus')}
                 />
+                {/*
                 <NavButton
                     view="Trade"
                     iconSrc={tradeIcon}
@@ -48,6 +49,7 @@ const Footer = ({ currentView, clickedButton, handleClick }: FooterProps) => {
                     clickedButton={clickedButton}
                     onClick={() => handleClick('Trade')}
                 />
+                */}
                 <NavButton
                     view="Quests"
                     iconSrc={questsIcon}

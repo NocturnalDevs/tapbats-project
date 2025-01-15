@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import crud, models
 from database.connection import get_db
+from utils.generate_referral_code import generate_referral_code  # Import the function
 from schemas import (
     UserCreate, User,  # Import User and UserCreate
     UserFunds, UserFundsCreate,  # Import UserFunds and UserFundsCreate
@@ -26,6 +27,10 @@ def validate_referral_code(referral_code: str, db: Session = Depends(get_db)):
     return {"valid": True}
 
 # Endpoint to save a new user
+def is_referral_code_unique(db: Session, referral_code: str) -> bool:
+    """Check if the referral code is unique in the database."""
+    return db.query(models.UserTable).filter(models.UserTable.referral_code == referral_code).first() is None
+
 @router.post("/save-user/", response_model=User)
 def save_user(user: UserCreate, db: Session = Depends(get_db)):
     # Check if the user already exists
@@ -33,8 +38,18 @@ def save_user(user: UserCreate, db: Session = Depends(get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="User already exists")
 
-    # Create the user and related tables
-    new_user = crud.create_user(db, telegram_id=user.telegram_id, username=user.username, referral_code=user.referral_code)
+    # Generate a unique referral code
+    referral_code = generate_referral_code()
+    while not is_referral_code_unique(db, referral_code):  # Ensure the code is unique
+        referral_code = generate_referral_code()
+
+    # Create the user with the generated referral code
+    new_user = crud.create_user(
+        db,
+        telegram_id=user.telegram_id,
+        username=user.username,
+        referral_code=referral_code  # Use the generated referral code
+    )
     return new_user
 
 # Endpoint to create user funds

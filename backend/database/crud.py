@@ -12,12 +12,15 @@ def create_user(db: Session, telegram_id: str, username: str, referral_code: str
     db.commit()
     db.refresh(db_user)
 
-    # Create related tables
+    # Create related tables (e.g., funds, tap mining, etc.)
     create_user_funds(db, telegram_id)
     create_user_tap_mining(db, telegram_id)
     create_user_socials(db, telegram_id)
     create_user_elder(db, telegram_id, "default_elder_id", "default_elder_username")
     return db_user
+
+def get_user(db: Session, telegram_id: str):
+    return db.query(UserTable).filter(UserTable.telegram_id == telegram_id).first()
 
 # User Funds CRUD
 def create_user_funds(db: Session, telegram_id: str):
