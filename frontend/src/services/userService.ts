@@ -28,8 +28,7 @@ export const validateReferralCode = async (referralCode: string): Promise<boolea
 export const saveUserToBackend = async (user: {
     telegram_id: string;
     username: string;
-    inputted_referral_code: string;
-}): Promise<void> => {
+}, inputted_referral_code: string): Promise<void> => {
     try {
         const response = await fetch('http://127.0.0.1:8000/api/save-user/', {
             method: 'POST',
@@ -37,8 +36,8 @@ export const saveUserToBackend = async (user: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                ...user,
-                inputted_referral_code: user.inputted_referral_code,
+                ...user, // Send the user object
+                inputted_referral_code, // Send the referral code as a separate field
             }),
         });
         if (!response.ok) throw new Error('Failed to save user info');

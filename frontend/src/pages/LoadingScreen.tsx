@@ -76,27 +76,28 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             setLoadError('Telegram user data is missing.');
             return;
         }
-        
+    
         try {
-            // Validate the inputted referral code
             const isValid = await validateReferralCode(referralCode);
             if (!isValid) {
                 setLoadError('Invalid referral code. Please try again.');
                 return;
             }
     
-            // Save the new user
-            await saveUserToBackend({
-                telegram_id: telegramUser.id.toString(),
-                username: telegramUser.username || telegramUser.first_name, // username always, if somehow can't retrieve the username get first name instead
-                inputted_referral_code: referralCode, // Send the inputted referral code
-            });
+            await saveUserToBackend(
+                {
+                    telegram_id: telegramUser.id.toString(),
+                    username: telegramUser.username || telegramUser.first_name,
+                },
+                referralCode // Pass the referral code as a separate argument
+            );
     
             // Clear any previous error messages
             setLoadError(null);
     
             // Proceed to cache assets after saving the user
-            cacheImages(staticAssetsToLoad);
+            console.log('User saved successfully. Caching assets...');
+            await cacheImages(staticAssetsToLoad);
         } catch (error) {
             console.error('Error validating or saving user:', error);
             setLoadError('Invalid referral code or failed to save user. Please try again.');
@@ -115,26 +116,27 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
     const cacheImages = async (imageUrls: string[]) => {
         const totalAssets = imageUrls.length;
         let loadedAssets = 0;
-
+    
         try {
             const promises = imageUrls.map(async (url) => {
                 const cache = await caches.open('image-cache');
                 const cachedResponse = await cache.match(url);
-
+    
                 if (cachedResponse) {
                     loadedAssets++;
                     setProgress(Math.round((loadedAssets / totalAssets) * 100));
                     return url;
                 }
-
+    
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Failed to fetch image: ${url}`);
                 await cache.put(url, response);
                 loadedAssets++;
                 setProgress(Math.round((loadedAssets / totalAssets) * 100));
             });
-
+    
             await Promise.all(promises);
+            console.log('All assets cached successfully.');
             setIsLoadingComplete(true); // Mark loading as complete
         } catch (error) {
             console.error('Error loading assets:', error);
@@ -155,7 +157,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             style={{ backgroundImage: `url(${bgPlaceholder})` }}
             onClick={handleClick}
         >
-            <div className="flex flex-col items-center justify-center | p-2 m-4 | bg-[#121116] bg-opacity-90 | rounded-md">
+            <div className="loading-content dark-gray-color eclipse-themed-border">
                 {loadError ? (
                     <div className="flex flex-col | justify-center items-center text-center m-2 | font-bold eclipse-themed-text">
                         {loadError}
@@ -210,6 +212,13 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
                     <>
                         <div className="loading-spinner"></div>
                         <p className="loading-progress">Loading... {progress}%</p>
+                        {/* Add the loading bar here */}
+                        <div className="loading-bar-container w-64 my-2">
+                            <div
+                                className="loading-bar"
+                                style={{ width: `${progress}%` }}
+                            ></div>
+                        </div>
                         <p className="loading-message">
                             Preparing your adventure... This one-time setup ensures faster launches later!
                         </p>
