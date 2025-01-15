@@ -16,10 +16,9 @@ def check_user_exists(telegram_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User does not exist")
     return {"exists": db_user is not None}
 
-# Endpoint to validate a referral code
 @router.get("/validate-referral-code/{referral_code}", response_model=dict)
 def validate_referral_code(referral_code: str, db: Session = Depends(get_db)):
-    db_user = crud.get_user_with_referral_code(db, referral_code=str(referral_code))
+    db_user = crud.get_user_with_referral_code(db, referral_code=referral_code)
     if not db_user:
         raise HTTPException(status_code=404, detail="Referral code not found")
     return {"valid": True}

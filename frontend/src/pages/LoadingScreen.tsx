@@ -182,7 +182,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
                             type="text"
                             value={referralCode}
                             onChange={(e) => setReferralCode(e.target.value)}
-                            placeholder="X3Y2Z1"
+                            placeholder="ABC123a"
                             className="text-gray-800 | p-2 m-2 rounded-md text-center"
                         />
                         <button
