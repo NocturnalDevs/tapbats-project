@@ -7,6 +7,16 @@ from database.connection import get_db
 router = APIRouter()
 
 # Endpoint to check if a user exists
+# routers/user_router.py
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from database import crud, models
+from database.connection import get_db
+from schemas import UserCreate, User  # Import User from schemas
+
+router = APIRouter()
+
+# Endpoint to check if a user exists
 @router.get("/user-exists/{telegram_id}", response_model=dict)
 def check_user_exists(telegram_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, telegram_id=str(telegram_id))
@@ -21,16 +31,16 @@ def validate_referral_code(referral_code: str, db: Session = Depends(get_db)):
     return {"valid": True}
 
 # Endpoint to save a new user
-@router.post("/save-user/", response_model=dict)
-def save_user(user: dict, db: Session = Depends(get_db)):
+@router.post("/save-user/", response_model=User)  # Use User as the response model
+def save_user(user: UserCreate, db: Session = Depends(get_db)):
     # Check if the user already exists
-    db_user = crud.get_user(db, telegram_id=user["telegram_id"])
+    db_user = crud.get_user(db, telegram_id=user.telegram_id)
     if db_user:
         raise HTTPException(status_code=400, detail="User already exists")
 
     # Create the user
-    new_user = crud.create_user(db, telegram_id=user["telegram_id"], username=user["username"], referral_code=user["referral_code"])
-    return {"message": "User created successfully", "user": new_user}
+    new_user = crud.create_user(db, telegram_id=user.telegram_id, username=user.username, referral_code=user.referral_code)
+    return new_user
 
 # Endpoint to get user details
 @router.get("/users/{telegram_id}", response_model=User)
