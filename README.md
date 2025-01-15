@@ -83,7 +83,7 @@ To run the game on Telegram, follow these steps:
 6. **Install Required Python Packages**
    Install the dependencies listed in the `requirements.txt` file:
    ```bash
-   pip install -r requirements.txt
+   pip install -r backend\requirements.txt
    ```
 
 7. **Set Up Environment Variables**

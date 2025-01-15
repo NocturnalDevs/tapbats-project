@@ -1,12 +1,10 @@
-# requirements.txt
-anyio==3.7.1
-asyncpg==0.28.0
-fastapi==0.103.1
-pydantic==1.10.7
-sniffio==1.3.0
-starlette==0.27.0
-typing_extensions==4.8.0
-uvicorn==0.23.2
-python-dotenv==1.0.0
-sqlalchemy==2.0.23
-psycopg2-binary==2.9.9
+anyio
+asyncpg
+fastapi
+pydantic
+python-dotenv
+psycopg2-binary
+uvicorn
+sniffio
+starlette
+sqlalchemy

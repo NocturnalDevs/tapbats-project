@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { nexusIcon, questsIcon, colonyIcon, walletIcon, eclipseGem } from '../assets/icons';
 import { bgPlaceholder } from '../assets/images';
-
+import { useUser } from '../contexts/UserContext';
+import { checkUserExists, validateReferralCode, saveUserToBackend } from '../services/userService';
 import SDK from '@twa-dev/sdk';
 
+// Used only on user creation if user does not yet exist in the database
 type TelegramUserInfo = {
     id: number;
     first_name: string;
@@ -18,53 +20,49 @@ interface LoadingScreenProps {
 }
 
 const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
+    // Page handling
     const [progress, setProgress] = useState(0);
     const [isLoadingComplete, setIsLoadingComplete] = useState(false);
     const [isTapped, setIsTapped] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
+
+    // User data
     const [isTelegram, setIsTelegram] = useState<boolean>(false);
     const [telegramUser, setTelegramUser] = useState<TelegramUserInfo | null>(null);
     const [referralCode, setReferralCode] = useState('');
     const [showReferralInput, setShowReferralInput] = useState(false);
 
+    // Save to global states the Telegram ID to be used by all pages and components for sending/requesting data
+    const { setUserTelegramID } = useUser();
+
     // Step 1: Check if the game is opened on Telegram
     useEffect(() => {
         if (SDK.initDataUnsafe.user) {
-            setIsTelegram(true);
-            const user = SDK.initDataUnsafe.user;
-            setTelegramUser(user);
+            setIsTelegram(true); // Game is opened on Telegram
+            const user = SDK.initDataUnsafe.user; // Get user info from Telegram using Telegram SDK
+            setTelegramUser(user); // Store temporarily the user info while on the loading screen
+            setUserTelegramID(user.id); // Store the user ID in the global context for the session
+
+            // Check if the user exists in the database
+            const checkUser = async () => {
+                try {
+                    const exists = await checkUserExists(user.id);
+                    if (!exists) {
+                        setShowReferralInput(true); // Show referral input if the user doesn't exist
+                    } else {
+                        cacheImages(staticAssetsToLoad); // Proceed to cache assets if the user exists
+                    }
+                } catch (error) {
+                    console.error('Error checking user existence:', error);
+                    setLoadError('Failed to check user existence. Please try again.');
+                }
+            };
+
+            checkUser(); // Call the async function
         } else {
             setLoadError('Game must be opened on Telegram.');
         }
-    }, []);
-
-    // Step 2: Check if the user exists in the database
-    const checkUserExists = async (userId: number) => {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/user-exists/${userId}`);
-            if (!response.ok) throw new Error('Failed to check user existence');
-            const data = await response.json();
-            return data.exists;
-        } catch (error) {
-            console.error('Error checking user existence:', error);
-            return false;
-        }
-    };
-
-    useEffect(() => {
-        if (telegramUser) {
-            const checkUser = async () => {
-                const exists = await checkUserExists(telegramUser.id);
-                if (!exists) {
-                    setShowReferralInput(true); // Show referral input if user doesn't exist
-                } else {
-                    // Proceed to cache assets if user exists
-                    cacheImages(staticAssetsToLoad);
-                }
-            };
-            checkUser();
-        }
-    }, [telegramUser]);
+    }, [setUserTelegramID]);
 
     // Handle referral code submission
     const handleReferralCodeSubmit = async () => {
@@ -73,44 +71,23 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             return;
         }
 
-        const isValid = await validateReferralCode(referralCode);
-        if (isValid && telegramUser) {
-            await saveUserToBackend(telegramUser, referralCode);
-            // After saving user, proceed to cache assets
-            cacheImages(staticAssetsToLoad);
-        }
-    };
-
-    const validateReferralCode = async (code: string) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/validate-referral-code/${code}`);
-            if (!response.ok) throw new Error('Invalid referral code');
-            return true;
+            const isValid = await validateReferralCode(referralCode);
+            if (isValid && telegramUser) {
+                await saveUserToBackend({
+                    telegram_id: telegramUser.id.toString(),
+                    username: telegramUser.username || telegramUser.first_name,
+                    referral_code: referralCode,
+                });
+                cacheImages(staticAssetsToLoad); // Proceed to cache assets after saving the user
+            }
         } catch (error) {
-            console.error('Error validating referral code:', error);
-            setLoadError('Invalid referral code. Please try again.');
-            return false;
+            console.error('Error validating or saving user:', error);
+            setLoadError('Invalid referral code or failed to save user. Please try again.');
         }
     };
 
-    const saveUserToBackend = async (user: TelegramUserInfo, referralCode: string) => {
-        try {
-            const response = await fetch('http://127.0.0.1:8000/save-user/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ ...user, referral_code: referralCode }),
-            });
-            if (!response.ok) throw new Error('Failed to save user info');
-            const data = await response.json();
-            console.log(data.message);
-        } catch (error) {
-            console.error('Error saving user info:', error);
-            setLoadError('Failed to save user info. Please try again.');
-        }
-    };
-
+    // Handle retry for errors
     const handleRetry = () => {
         setLoadError(null); // Clear the error message
         setShowReferralInput(true); // Show the referral input again
