@@ -71,18 +71,30 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             setLoadError('Please enter a referral code.');
             return;
         }
-    
+
+        // Ensure telegramUser is not null
+        if (!telegramUser) {
+            setLoadError('Telegram user data is missing.');
+            return;
+        }
+
         try {
-            // Validate the referral code
+            // Validate the inputted referral code
             const isValid = await validateReferralCode(referralCode);
-            if (isValid && telegramUser) {
-                // Save the user (backend will generate a referral code)
-                await saveUserToBackend({
-                    telegram_id: telegramUser.id.toString(),
-                    username: telegramUser.username || telegramUser.first_name,
-                });
-                cacheImages(staticAssetsToLoad); // Proceed to cache assets after saving the user
+            if (!isValid) {
+                setLoadError('Invalid referral code. Please try again.');
+                return;
             }
+
+            // Save the new user with the inputted referral code
+            await saveUserToBackend({
+                telegram_id: telegramUser.id.toString(),
+                username: telegramUser.username || telegramUser.first_name,
+                inputted_referral_code: referralCode, // Send the inputted referral code
+            });
+
+            // Proceed to cache assets after saving the user
+            cacheImages(staticAssetsToLoad);
         } catch (error) {
             console.error('Error validating or saving user:', error);
             setLoadError('Invalid referral code or failed to save user. Please try again.');

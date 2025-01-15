@@ -32,23 +32,28 @@ def is_referral_code_unique(db: Session, referral_code: str) -> bool:
     return db.query(models.UserTable).filter(models.UserTable.referral_code == referral_code).first() is None
 
 @router.post("/save-user/", response_model=User)
-def save_user(user: UserCreate, db: Session = Depends(get_db)):
-    # Check if the user already exists
+def save_user(user: UserCreate, inputted_referral_code: str, db: Session = Depends(get_db)):
+    # Step 1: Validate the inputted referral code
+    referral_code_owner = db.query(models.UserTable).filter(models.UserTable.referral_code == inputted_referral_code).first()
+    if not referral_code_owner:
+        raise HTTPException(status_code=400, detail="Invalid referral code")
+
+    # Step 2: Check if the new user already exists
     db_user = crud.get_user(db, telegram_id=user.telegram_id)
     if db_user:
         raise HTTPException(status_code=400, detail="User already exists")
 
-    # Generate a unique referral code
-    referral_code = generate_referral_code()
-    while not is_referral_code_unique(db, referral_code):  # Ensure the code is unique
-        referral_code = generate_referral_code()
+    # Step 3: Generate a new referral code for the new user
+    new_referral_code = generate_referral_code()
+    while not is_referral_code_unique(db, new_referral_code):  # Ensure the code is unique
+        new_referral_code = generate_referral_code()
 
-    # Create the user with the generated referral code
+    # Step 4: Save the new user with their own referral code
     new_user = crud.create_user(
         db,
         telegram_id=user.telegram_id,
         username=user.username,
-        referral_code=referral_code  # Use the generated referral code
+        referral_code=new_referral_code  # Use the newly generated referral code
     )
     return new_user
 
