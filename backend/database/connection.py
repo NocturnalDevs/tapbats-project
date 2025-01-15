@@ -6,14 +6,16 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import logging
 
-# Print the current working directory
 print("Current Working Directory:", os.getcwd())
 
-# Load the .env file from the parent directory
-load_dotenv()  # Adjust the path if needed
+load_dotenv() 
+
+# Enable detailed logging
+logger = logging.getLogger(__name__)
 
 # Load DATABASE_URL from environment variable
-DATABASE_URL = os.getenv("DATABASE_URL")
+# DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = "postgresql://postgres:V8Bn1lv06lan90@localhost:5432/tapbats_db"
 print("DATABASE_URL:", DATABASE_URL)
 
 if not DATABASE_URL:
@@ -36,6 +38,5 @@ def get_db():
     finally:
         db.close()
 
-# Enable detailed logging
-# logging.basicConfig()
-# logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
