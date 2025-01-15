@@ -1,12 +1,7 @@
 // Check if a user exists in the database
 export const checkUserExists = async (userId: number): Promise<boolean> => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/user-exists/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        const response = await fetch(`http://127.0.0.1:8000/api/user-exists/${userId}`);
         if (!response.ok) throw new Error('Failed to check user existence');
         const data = await response.json();
         return data.exists;
@@ -19,12 +14,7 @@ export const checkUserExists = async (userId: number): Promise<boolean> => {
 // Validate a referral code
 export const validateReferralCode = async (referralCode: string): Promise<boolean> => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/validate-referral-code/${referralCode}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        const response = await fetch(`http://127.0.0.1:8000/api/validate-referral-code/${referralCode}`);
         if (!response.ok) throw new Error('Invalid referral code');
         const data = await response.json();
         return data.valid;
@@ -38,7 +28,7 @@ export const validateReferralCode = async (referralCode: string): Promise<boolea
 export const saveUserToBackend = async (user: {
     telegram_id: string;
     username: string;
-    inputted_referral_code: string;  // Add this field
+    inputted_referral_code: string;
 }): Promise<void> => {
     try {
         const response = await fetch('http://127.0.0.1:8000/api/save-user/', {
@@ -46,7 +36,10 @@ export const saveUserToBackend = async (user: {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify({
+                ...user,
+                inputted_referral_code: user.inputted_referral_code,
+            }),
         });
         if (!response.ok) throw new Error('Failed to save user info');
         const data = await response.json();

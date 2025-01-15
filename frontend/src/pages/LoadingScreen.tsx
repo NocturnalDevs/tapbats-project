@@ -70,7 +70,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             setLoadError('Please enter a referral code.');
             return;
         }
-
+    
         // Ensure telegramUser is not null
         if (!telegramUser) {
             setLoadError('Telegram user data is missing.');
@@ -84,14 +84,17 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
                 setLoadError('Invalid referral code. Please try again.');
                 return;
             }
-
+    
             // Save the new user
             await saveUserToBackend({
                 telegram_id: telegramUser.id.toString(),
                 username: telegramUser.username || telegramUser.first_name, // username always, if somehow can't retrieve the username get first name instead
                 inputted_referral_code: referralCode, // Send the inputted referral code
             });
-
+    
+            // Clear any previous error messages
+            setLoadError(null);
+    
             // Proceed to cache assets after saving the user
             cacheImages(staticAssetsToLoad);
         } catch (error) {
