@@ -54,7 +54,8 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
                     }
                 } catch (error) {
                     console.error('Error checking user existence:', error);
-                    setLoadError('Failed to check user existence. Please try again.');
+                    // If there's an error, assume the user doesn't exist and show the referral input
+                    setShowReferralInput(true);
                 }
             };
 

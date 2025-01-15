@@ -1,5 +1,3 @@
-// src/services/userService.ts
-
 // Check if a user exists in the database
 export const checkUserExists = async (userId: number): Promise<boolean> => {
     try {
