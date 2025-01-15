@@ -19,6 +19,13 @@ def create_user(db: Session, telegram_id: str, username: str, referral_code: str
     """
     logger.debug(f"Creating user with telegram_id={telegram_id}, username={username}")
     try:
+        # Check if the user already exists
+        db_user = get_user_with_telegram_id(db, telegram_id)
+        if db_user:
+            logger.warning(f"User with telegram_id={telegram_id} already exists")
+            return db_user  # Return the existing user instead of raising an error
+
+        # Create a new user
         db_user = UserTable(telegram_id=telegram_id, username=username, referral_code=referral_code)
         db.add(db_user)
         db.commit()

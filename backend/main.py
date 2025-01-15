@@ -20,6 +20,20 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# Update CORS middleware to allow your frontend's origin
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",  # Local development
+        "https://6b15-136-158-103-116.ngrok-free.app",  # Your ngrok URL / frontend URL
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
+
+app.include_router(user_router, prefix="/api")
+
 @app.get("/")
 def read_root():
     logger.debug("This is a debug message")
@@ -36,17 +50,3 @@ if __name__ == "__main__":
         reload=True,
         log_level="debug",
     )
-
-# Update CORS middleware to allow your frontend's origin
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",  # Local development
-        "https://6b15-136-158-103-116.ngrok-free.app",  # Your ngrok URL / frontend URL
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
-)
-
-app.include_router(user_router, prefix="/api")
