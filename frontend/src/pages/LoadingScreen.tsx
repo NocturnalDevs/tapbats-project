@@ -53,12 +53,10 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
                         cacheImages(staticAssetsToLoad); // Proceed to cache assets if the user exists
                     }
                 } catch (error) {
-                    console.error('Error checking user existence:', error);
                     // If there's an error, assume the user doesn't exist and show the referral input
                     setShowReferralInput(true);
                 }
             };
-
             checkUser(); // Call the async function
         } else {
             setLoadError('Game must be opened on Telegram.');
@@ -67,6 +65,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
 
     // Handle referral code submission
     const handleReferralCodeSubmit = async () => {
+        // Ensure referral input is not null
         if (!referralCode) {
             setLoadError('Please enter a referral code.');
             return;
@@ -77,7 +76,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             setLoadError('Telegram user data is missing.');
             return;
         }
-
+        
         try {
             // Validate the inputted referral code
             const isValid = await validateReferralCode(referralCode);
@@ -86,10 +85,10 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
                 return;
             }
 
-            // Save the new user with the inputted referral code
+            // Save the new user
             await saveUserToBackend({
                 telegram_id: telegramUser.id.toString(),
-                username: telegramUser.username || telegramUser.first_name,
+                username: telegramUser.username || telegramUser.first_name, // username always, if somehow can't retrieve the username get first name instead
                 inputted_referral_code: referralCode, // Send the inputted referral code
             });
 

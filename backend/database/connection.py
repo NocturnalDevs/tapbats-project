@@ -37,5 +37,5 @@ def get_db():
         db.close()
 
 # Enable detailed logging
-logging.basicConfig()
-logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
+# logging.basicConfig()
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
