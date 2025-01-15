@@ -1,6 +1,7 @@
+# schemas/schemas.py
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from enum import Enum
 
 # Enums
@@ -33,6 +34,15 @@ class User(UserBase):
     current_user_time: datetime
     overall_time_played: float
     banned: bool
+
+    funds: Optional["UserFunds"] = None
+    tap_mining: Optional["UserTapMining"] = None
+    socials: Optional["UserSocials"] = None
+    quests: Optional[List["UserQuest"]] = None
+    elder: Optional["UserElder"] = None
+    members: Optional[List["UserMembers"]] = None
+    caverns: Optional[List["UserCavern"]] = None
+    miners: Optional[List["UserMiner"]] = None
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -1,3 +1,4 @@
+# database/crud.py
 from sqlalchemy.orm import Session
 from .models import (
     UserTable, UserFundsTable, UserTapMiningTable, UserSocialsTable,
@@ -10,10 +11,13 @@ def create_user(db: Session, telegram_id: str, username: str, referral_code: str
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user
 
-def get_user(db: Session, telegram_id: str):
-    return db.query(UserTable).filter(UserTable.telegram_id == telegram_id).first()
+    # Create related tables
+    create_user_funds(db, telegram_id)
+    create_user_tap_mining(db, telegram_id)
+    create_user_socials(db, telegram_id)
+    create_user_elder(db, telegram_id, "default_elder_id", "default_elder_username")
+    return db_user
 
 # User Funds CRUD
 def create_user_funds(db: Session, telegram_id: str):
@@ -39,30 +43,6 @@ def create_user_socials(db: Session, telegram_id: str):
     db.refresh(db_socials)
     return db_socials
 
-# User Cavern CRUD
-def create_user_cavern(db: Session, telegram_id: str, cavern_id: int):
-    db_cavern = UserCavernTable(telegram_id=telegram_id, cavern_id=cavern_id)
-    db.add(db_cavern)
-    db.commit()
-    db.refresh(db_cavern)
-    return db_cavern
-
-# User Miner CRUD
-def create_user_miner(db: Session, telegram_id: str, miner_id: int):
-    db_miner = UserMinerTable(telegram_id=telegram_id, miner_id=miner_id)
-    db.add(db_miner)
-    db.commit()
-    db.refresh(db_miner)
-    return db_miner
-
-# User Quest CRUD
-def create_user_quest(db: Session, telegram_id: str, quest_id: int):
-    db_quest = UserQuestTable(telegram_id=telegram_id, quest_id=quest_id)
-    db.add(db_quest)
-    db.commit()
-    db.refresh(db_quest)
-    return db_quest
-
 # User Elder CRUD
 def create_user_elder(db: Session, telegram_id: str, elder_telegram_id: str, elder_username: str):
     db_elder = UserElderTable(telegram_id=telegram_id, elder_telegram_id=elder_telegram_id, elder_username=elder_username)
@@ -70,11 +50,3 @@ def create_user_elder(db: Session, telegram_id: str, elder_telegram_id: str, eld
     db.commit()
     db.refresh(db_elder)
     return db_elder
-
-# User Members CRUD
-def create_user_member(db: Session, telegram_id: str, member_telegram_id: str, member_username: str):
-    db_member = UserMembersTable(telegram_id=telegram_id, member_telegram_id=member_telegram_id, member_username=member_username)
-    db.add(db_member)
-    db.commit()
-    db.refresh(db_member)
-    return db_member
