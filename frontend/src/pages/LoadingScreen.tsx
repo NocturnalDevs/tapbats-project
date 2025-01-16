@@ -62,7 +62,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             } catch (error) {
                 console.error('Error checking user existence:', error);
                 setDisplayView('referralInput');
-                setDisplayView('complete'); // TODO only for development testing, remove on deployment
+                // setDisplayView('complete'); // TODO only for development testing, remove on deployment
             }
         };
 

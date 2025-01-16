@@ -26,7 +26,6 @@ class UserTable(Base):
 
     # Relationships
     funds = relationship("UserFundsTable", uselist=False, back_populates="user")
-    tap_mining = relationship("UserTapMiningTable", uselist=False, back_populates="user")
     socials = relationship("UserSocialsTable", uselist=False, back_populates="user")
     quests = relationship("UserQuestTable", back_populates="user")
     elder = relationship("UserElderTable", uselist=False, back_populates="user")
@@ -46,21 +45,10 @@ class UserFundsTable(Base):
     total_ntc_count = Column(Float, default=0.0)
     highest_ntc_count = Column(Float, default=0.0)
     overall_ntc_count = Column(Float, default=0.0)
+    daily_gems_amount = Column(Float, default=75.0)  # Default for Fledgling
 
     # Relationships
     user = relationship("UserTable", back_populates="funds")
-
-# User Tap Mining Table
-class UserTapMiningTable(Base):
-    __tablename__ = "user_tap_mining_table"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    telegram_id = Column(String, ForeignKey("user_table.telegram_id"), nullable=False)
-    daily_gems_amount = Column(Float, default=75.0)  # Default for Fledgling
-    mining_level = Column(Integer, default=1)
-
-    # Relationships
-    user = relationship("UserTable", back_populates="tap_mining")
 
 # Cavern Table (Constant/Default Values)
 class CavernTable(Base):

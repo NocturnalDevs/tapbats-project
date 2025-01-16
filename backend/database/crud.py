@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from .models import (
-    UserTable, UserFundsTable, UserTapMiningTable, UserSocialsTable,
+    UserTable, UserFundsTable, UserSocialsTable,
     UserCavernTable, UserMinerTable, UserElderTable, CavernTable, MinerTable,
     QuestTable, UserQuestTable
 )
@@ -74,24 +74,6 @@ def create_user_funds(db: Session, telegram_id: str) -> UserFundsTable:
         return db_funds
     except SQLAlchemyError as e:
         logger.error(f"Error creating user funds: {str(e)}")
-        db.rollback()
-        raise
-
-# User Tap Mining CRUD
-def create_user_tap_mining(db: Session, telegram_id: str) -> UserTapMiningTable:
-    """
-    Create a new entry in the UserTapMiningTable for the user.
-    """
-    logger.debug(f"Creating user tap mining for telegram_id={telegram_id}")
-    try:
-        db_tap_mining = UserTapMiningTable(telegram_id=telegram_id)
-        db.add(db_tap_mining)
-        db.commit()
-        db.refresh(db_tap_mining)
-        logger.debug(f"User tap mining created successfully: {db_tap_mining}")
-        return db_tap_mining
-    except SQLAlchemyError as e:
-        logger.error(f"Error creating user tap mining: {str(e)}")
         db.rollback()
         raise
 

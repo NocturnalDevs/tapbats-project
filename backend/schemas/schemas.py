@@ -37,7 +37,6 @@ class User(UserBase):
     banned: bool
 
     funds: Optional["UserFunds"] = None
-    tap_mining: Optional["UserTapMining"] = None
     caverns: Optional[List["UserCavern"]] = None
     miners: Optional[List["UserMiner"]] = None
     socials: Optional["UserSocials"] = None
@@ -56,26 +55,13 @@ class UserFundsCreate(UserFundsBase):
 
 class UserFunds(UserFundsBase):
     id: int
-    total_gem_count: float
-    highest_gem_count: float
-    overall_gem_count: float
+    total_gem_count: int
+    highest_gem_count: int
+    overall_gem_count: int
     total_ntc_count: float
     highest_ntc_count: float
     overall_ntc_count: float
-
-    model_config = ConfigDict(from_attributes=True)
-
-# Tap Mining Schema
-class UserTapMiningBase(BaseModel):
-    telegram_id: str
-
-class UserTapMiningCreate(UserTapMiningBase):
-    pass
-
-class UserTapMining(UserTapMiningBase):
-    id: int
-    daily_gems_amount: float
-    mining_level: int
+    daily_gems_amount: int
 
     model_config = ConfigDict(from_attributes=True)
 

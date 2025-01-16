@@ -2,7 +2,6 @@
 from .schemas import (
     UserBase, UserCreate, User,
     UserFundsBase, UserFundsCreate, UserFunds,
-    UserTapMiningBase, UserTapMiningCreate, UserTapMining,
     UserSocialsBase, UserSocialsCreate, UserSocials,
     QuestBase, QuestCreate, Quest, QuestStatus,
     UserQuestBase, UserQuestCreate, UserQuest,

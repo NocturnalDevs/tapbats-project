@@ -102,7 +102,7 @@ miner_stats = {
 # Function to calculate cavern cost
 def calculate_cavern_cost(required_nocturnal_level):
     required_gems = nocturnal_level_dict[required_nocturnal_level]
-    cavern_cost = (required_gems * ntc_to_ton) * cavern_cost_multiplier
+    cavern_cost = round((required_gems * ntc_to_ton) * cavern_cost_multiplier, 2)
     return cavern_cost
 
 # Function to calculate miner cost (to ensure cost is ALWAYS less than the miner's earned gems)
