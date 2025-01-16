@@ -1,4 +1,4 @@
-const BASE_URL = "https://abcd-1234-5678.ngrok-free.app";
+const BASE_URL = "http://localhost:8000";
 
 export const checkUserExists = async (telegramId: number) => {
     try {
@@ -21,7 +21,7 @@ export const checkUserExists = async (telegramId: number) => {
 export const validateReferralCode = async (referralCode: string): Promise<boolean> => {
     try {
         console.log(`Validating referral code: ${referralCode}`);
-        const response = await fetch(`/api/validate-referral-code/${referralCode}`, {
+        const response = await fetch(`${BASE_URL}/api/validate-referral-code/${referralCode}`, {
             headers: {
                 "accept": "application/json",
             },
@@ -44,18 +44,16 @@ export const saveUserToBackend = async (user: {
     username: string;
 }, inputted_referral_code: string): Promise<void> => {
     try {
-        const url = new URL('/api/save-user/');
-        url.searchParams.append('inputted_referral_code', inputted_referral_code);
-
-        const response = await fetch(url.toString(), {
+        const response = await fetch(`${BASE_URL}/api/save-user/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
             },
             body: JSON.stringify({
-                ...user,
-                referral_code: inputted_referral_code,
+                telegram_id: user.telegram_id,
+                username: user.username,
+                inputted_referral_code: inputted_referral_code,  // Include this field
             }),
         });
 

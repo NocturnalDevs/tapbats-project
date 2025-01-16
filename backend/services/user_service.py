@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from database import crud, models
 from schemas import UserCreate, User
+from fastapi import HTTPException
 from utils.generate_referral_code import generate_referral_code
 
 class UserService:
@@ -19,7 +20,7 @@ class UserService:
     def is_referral_code_unique(self, referral_code: str) -> bool:
         return crud.get_user_with_referral_code(self.db, referral_code=str(referral_code)) is None
 
-    def save_user(self, user: UserCreate, inputted_referral_code: str) -> User:
+    def save_user(self, user: UserCreate) -> User:
         try:
             # Step 1: Check if the user already exists
             existing_user = crud.get_user_with_telegram_id(self.db, telegram_id=user.telegram_id)
@@ -28,7 +29,7 @@ class UserService:
 
             # Step 2: Fetch the telegram ID and username of the owner of the referral code (elder)
             elder_user = self.db.query(models.UserTable.telegram_id, models.UserTable.username) \
-                    .filter(models.UserTable.referral_code == inputted_referral_code) \
+                    .filter(models.UserTable.referral_code == user.inputted_referral_code) \
                     .first()
 
             if elder_user:
@@ -53,7 +54,6 @@ class UserService:
 
             # Step 5: Create related entries for the new user
             crud.create_user_funds(self.db, telegram_id=user.telegram_id)
-            crud.create_user_tap_mining(self.db, telegram_id=user.telegram_id)
             crud.create_user_socials(self.db, telegram_id=user.telegram_id)
             crud.create_user_caverns(self.db, telegram_id=user.telegram_id)
             crud.create_user_miners(self.db, telegram_id=user.telegram_id)
@@ -77,8 +77,8 @@ class UserService:
 
         except IntegrityError as e:
             self.db.rollback()
-            raise ValueError("User already exists or referral code is not unique")
+            raise HTTPException(status_code=400, detail="User already exists or referral code is not unique")
 
         except Exception as e:
             self.db.rollback()
-            raise ValueError(f"Error saving user: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Error saving user: {str(e)}")

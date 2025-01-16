@@ -23,7 +23,8 @@ class QuestStatus(str, Enum):
 class UserBase(BaseModel):
     telegram_id: str
     username: str
-    referral_code: str  # Add this field
+    referral_code: Optional[str] = None
+    inputted_referral_code: Optional[str] = None
 
 class UserCreate(UserBase):
     pass
