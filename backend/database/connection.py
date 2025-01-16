@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 # Load DATABASE_URL from environment variable
 # DATABASE_URL = os.getenv("DATABASE_URL")
-DATABASE_URL = "postgresql://postgres:V8Bn1lv06lan90@localhost:5432/tapbats_db"
+DATABASE_URL = "postgresql://postgres:V8Bn1lv06lan90@localhost:5432/tapbats_db" # change this to point towards your postgresql database
 print("DATABASE_URL:", DATABASE_URL)
 
 if not DATABASE_URL:

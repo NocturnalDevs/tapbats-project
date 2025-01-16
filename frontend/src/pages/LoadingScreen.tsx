@@ -62,12 +62,14 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
             } catch (error) {
                 console.error('Error checking user existence:', error);
                 setDisplayView('referralInput');
+                setDisplayView('complete'); // TODO only for development testing, remove on deployment
             }
         };
 
         checkUser();
     }, [setUserTelegramID]);
 
+    // TODO not properly working (only works when logging is enabled on backend)
     // Handle referral code submission
     const handleReferralCodeSubmit = async () => {
         console.log('Handling referral code submission...');

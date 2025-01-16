@@ -21,6 +21,7 @@ class UserTable(Base):
     last_online = Column(DateTime, default=datetime.utcnow)
     current_user_time = Column(DateTime, default=datetime.utcnow)
     overall_time_played = Column(Float, default=0.0)
+    daily_gems_refreshed = Column(Boolean, default=False)
     banned = Column(Boolean, default=False)
 
     # Relationships
@@ -133,7 +134,6 @@ class QuestTable(Base):
     __tablename__ = "quest_table"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    quest_code = Column(String, nullable=False)
     type = Column(QuestType, nullable=False)
     icon = Column(String, nullable=False)
     description = Column(String, nullable=False)

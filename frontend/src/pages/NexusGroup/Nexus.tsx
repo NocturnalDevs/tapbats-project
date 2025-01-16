@@ -17,8 +17,10 @@ const Nexus = ({ handleClick }: NexusProps) => {
         switch (activeView) {
             case 'tap':
                 return <TapArea setActiveView={setActiveView} />;
+            {/*
             case 'upgrades':
                 return <Upgrades setActiveView={setActiveView} />;
+            */}
             case 'miners':
                 return <Miners setActiveView={setActiveView} />;
             case 'caverns':
@@ -40,12 +42,14 @@ const Nexus = ({ handleClick }: NexusProps) => {
             
             {/* Navigational Buttons */}
             <div className="flex justify-center | space-x-2 mt-4 | font-bold">
+                {/*
                 <button
                     className="bg-[#121116] | pl-1 pr-1 pt-2 pb-2 | rounded-md w-full text-center tap-anim"
                     onClick={() => setActiveView('upgrades')}
                 >
                     Upgrades
                 </button>
+                */}
                 <button
                     className="bg-[#121116] | pl-1 pr-1 pt-2 pb-2 | rounded-md w-full text-center tap-anim"
                     onClick={() => setActiveView('miners')}

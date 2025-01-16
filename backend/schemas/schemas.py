@@ -33,16 +33,17 @@ class User(UserBase):
     last_online: datetime
     current_user_time: datetime
     overall_time_played: float
+    daily_gems_refreshed: bool
     banned: bool
 
     funds: Optional["UserFunds"] = None
     tap_mining: Optional["UserTapMining"] = None
+    caverns: Optional[List["UserCavern"]] = None
+    miners: Optional[List["UserMiner"]] = None
     socials: Optional["UserSocials"] = None
     quests: Optional[List["UserQuest"]] = None
     elder: Optional["UserElder"] = None
     members: Optional[List["UserMembers"]] = None
-    caverns: Optional[List["UserCavern"]] = None
-    miners: Optional[List["UserMiner"]] = None
 
     model_config = ConfigDict(from_attributes=True)
 
