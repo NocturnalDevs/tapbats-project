@@ -4,14 +4,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
-import logging
 
 print("Current Working Directory:", os.getcwd())
 
 load_dotenv() 
-
-# Enable detailed logging
-logger = logging.getLogger(__name__)
 
 # Load DATABASE_URL from environment variable
 # DATABASE_URL = os.getenv("DATABASE_URL")
@@ -37,6 +33,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-logging.basicConfig()
-logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)

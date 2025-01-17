@@ -11,6 +11,3 @@ def generate_referral_code():
     # Combine them in the format ABC123x
     code = f"{letters}{digits}{lowercase_letter}"
     return code
-
-# Example usage
-print(generate_referral_code())

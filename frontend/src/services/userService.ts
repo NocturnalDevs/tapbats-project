@@ -1,6 +1,6 @@
 const BASE_URL = "http://localhost:8000";
 
-export const checkUserExists = async (telegramId: number) => {
+export const checkUserExists = async (telegramId: number): Promise<boolean> => {
     try {
         const response = await fetch(`${BASE_URL}/api/user-exists/${telegramId}`, {
             headers: {
@@ -11,6 +11,7 @@ export const checkUserExists = async (telegramId: number) => {
             throw new Error(`Failed to check user existence: ${response.statusText}`);
         }
         const data = await response.json();
+        console.log("User existence response:", data);
         return data.exists;
     } catch (error) {
         console.error("Error checking user existence:", error);
@@ -42,7 +43,9 @@ export const validateReferralCode = async (referralCode: string): Promise<boolea
 export const saveUserToBackend = async (user: {
     telegram_id: string;
     username: string;
-}, inputted_referral_code: string): Promise<void> => {
+    elder_referral_code: string
+}): Promise<boolean> => {
+    console.log('Data to be sent:', user);
     try {
         const response = await fetch(`${BASE_URL}/api/save-user/`, {
             method: 'POST',
@@ -51,9 +54,11 @@ export const saveUserToBackend = async (user: {
                 'accept': 'application/json',
             },
             body: JSON.stringify({
-                telegram_id: user.telegram_id,
-                username: user.username,
-                inputted_referral_code: inputted_referral_code,  // Include this field
+                user_data: {  // Nest the data under `user_data`
+                    telegram_id: user.telegram_id,
+                    username: user.username,
+                    elder_referral_code: user.elder_referral_code,
+                },
             }),
         });
 
@@ -65,6 +70,7 @@ export const saveUserToBackend = async (user: {
 
         const data = await response.json();
         console.log('User saved successfully:', data);
+        return data;
     } catch (error) {
         console.error('Error saving user info:', error);
         throw error;

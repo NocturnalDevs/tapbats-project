@@ -23,11 +23,12 @@ class QuestStatus(str, Enum):
 class UserBase(BaseModel):
     telegram_id: str
     username: str
-    referral_code: Optional[str] = None
-    inputted_referral_code: Optional[str] = None
 
 class UserCreate(UserBase):
-    pass
+    elder_referral_code: str
+
+class UserCreateWrapper(BaseModel):
+    user_data: UserCreate
 
 class User(UserBase):
     id: int
@@ -46,6 +47,11 @@ class User(UserBase):
     members: Optional[List["UserMembers"]] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+# Responses Schema
+class SaveUserResponse(BaseModel):
+    tables: dict
+    error: str = None
 
 # Funds Schema
 class UserFundsBase(BaseModel):

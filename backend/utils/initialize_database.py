@@ -3,7 +3,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from database.models import Base, CavernTable, MinerTable
+from database.models import Base, CavernTable, MinerTable, UserTable
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -15,13 +15,16 @@ from constant_values import (
 )
 
 # Database connection
-# DATABASE_URL = os.getenv("DATABASE_URL")
 DATABASE_URL = "postgresql://postgres:V8Bn1lv06lan90@localhost:5432/tapbats_db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create tables if they don't exist
-Base.metadata.create_all(bind=engine)
+# Function to clear the database
+def clear_database():
+    print("Clearing the database...")
+    Base.metadata.drop_all(bind=engine)  # Drop all tables
+    Base.metadata.create_all(bind=engine)  # Recreate all tables
+    print("Database cleared and recreated successfully!")
 
 # Function to generate miner names
 def generate_miner_names(cavern_name, count):
@@ -33,6 +36,15 @@ def populate_tables():
     db = SessionLocal()
 
     try:
+        # Create a user with the specified values (DO NOT SET ID)
+        user = UserTable(
+            telegram_id="1928374650",
+            username="GameMaster",
+            referral_code="BAT219g",
+        )
+        db.add(user)
+        db.commit()
+
         # Populate CavernTable
         for cavern_data in caverns_data:
             cavern = CavernTable(**cavern_data)
@@ -65,4 +77,5 @@ def populate_tables():
         db.close()
 
 if __name__ == "__main__":
-    populate_tables()
+    clear_database()  # Clear the database first
+    populate_tables()  # Populate the tables

@@ -1,6 +1,7 @@
 # schemas/__init__.py
 from .schemas import (
     UserBase, UserCreate, User,
+    SaveUserResponse, UserCreateWrapper,
     UserFundsBase, UserFundsCreate, UserFunds,
     UserSocialsBase, UserSocialsCreate, UserSocials,
     QuestBase, QuestCreate, Quest, QuestStatus,

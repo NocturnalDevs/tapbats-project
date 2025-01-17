@@ -25,13 +25,13 @@ class UserTable(Base):
     banned = Column(Boolean, default=False)
 
     # Relationships
-    funds = relationship("UserFundsTable", uselist=False, back_populates="user")
-    socials = relationship("UserSocialsTable", uselist=False, back_populates="user")
-    quests = relationship("UserQuestTable", back_populates="user")
-    elder = relationship("UserElderTable", uselist=False, back_populates="user")
-    members = relationship("UserMembersTable", back_populates="user")
-    caverns = relationship("UserCavernTable", back_populates="user")
-    miners = relationship("UserMinerTable", back_populates="user")
+    funds = relationship("UserFundsTable", uselist=False, back_populates="user", cascade="all, delete-orphan")
+    socials = relationship("UserSocialsTable", uselist=False, back_populates="user", cascade="all, delete-orphan")
+    quests = relationship("UserQuestTable", back_populates="user", cascade="all, delete-orphan")
+    members = relationship("UserMembersTable", back_populates="user", cascade="all, delete-orphan")
+    elder = relationship("UserElderTable", uselist=False, back_populates="user", cascade="all, delete-orphan")
+    caverns = relationship("UserCavernTable", back_populates="user", cascade="all, delete-orphan")
+    miners = relationship("UserMinerTable", back_populates="user", cascade="all, delete-orphan")
 
 # User Funds Table
 class UserFundsTable(Base):
