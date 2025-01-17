@@ -1,5 +1,7 @@
 ## IMPORTANT
-- Use vscode and install github extension for easy push and pull request
+- Use vscode and gitbash and install github extension to easily push and pull from repository.
+- Make sure to connect gitbash and vscode to the (nocturnaldevs github account) and this repository.
+- Use nocturnaldevs google and github account to make connections easier
 
 ---
 
