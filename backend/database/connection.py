@@ -9,9 +9,8 @@ print("Current Working Directory:", os.getcwd())
 
 load_dotenv() 
 
-# Load DATABASE_URL from environment variable
-# DATABASE_URL = os.getenv("DATABASE_URL")
-DATABASE_URL = "postgresql://postgres:V8Bn1lv06lan90@localhost:5432/tapbats_db" # change this to point towards your postgresql database
+DATABASE_URL = os.getenv("DATABASE_URL")
+# DATABASE_URL = "postgresql://username:password@localhost:5432/database" # use this and comment out line 13 if database connection is not working
 print("DATABASE_URL:", DATABASE_URL)
 
 if not DATABASE_URL:

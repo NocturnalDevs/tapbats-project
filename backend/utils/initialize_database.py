@@ -15,7 +15,8 @@ from constant_values import (
 )
 
 # Database connection
-DATABASE_URL = "postgresql://postgres:V8Bn1lv06lan90@localhost:5432/tapbats_db"
+DATABASE_URL = os.getenv("DATABASE_URL")
+# DATABASE_URL = "postgresql://username:password@localhost:5432/database" # use this and comment out line 13 if database connection is not working
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

@@ -23,6 +23,9 @@ class UserTable(Base):
     overall_time_played = Column(Float, default=0.0)
     daily_gems_refreshed = Column(Boolean, default=False)
     banned = Column(Boolean, default=False)
+    tap_streak = Column(Integer, default=0)  # Moved from UserTapMiningTable for easier access
+    last_streak_update = Column(DateTime, default=datetime.utcnow)  # Moved from UserTapMiningTable
+    timezone = Column(String, default="UTC")  # Added for timezone-based checks
 
     # Relationships
     funds = relationship("UserFundsTable", uselist=False, back_populates="user", cascade="all, delete-orphan")
@@ -32,6 +35,9 @@ class UserTable(Base):
     elder = relationship("UserElderTable", uselist=False, back_populates="user", cascade="all, delete-orphan")
     caverns = relationship("UserCavernTable", back_populates="user", cascade="all, delete-orphan")
     miners = relationship("UserMinerTable", back_populates="user", cascade="all, delete-orphan")
+    tap_mining = relationship("UserTapMiningTable", uselist=False, back_populates="user", cascade="all, delete-orphan")
+    achievements = relationship("UserAchievementsTable", back_populates="user", cascade="all, delete-orphan")
+    notifications = relationship("UserNotificationsTable", back_populates="user", cascade="all, delete-orphan")
 
 # User Funds Table
 class UserFundsTable(Base):
@@ -46,6 +52,7 @@ class UserFundsTable(Base):
     highest_ntc_count = Column(Float, default=0.0)
     overall_ntc_count = Column(Float, default=0.0)
     daily_gems_amount = Column(Float, default=75.0)  # Default for Fledgling
+    available_gems_to_mine = Column(Float, default=0.0)  # Added for tap mining
 
     # Relationships
     user = relationship("UserTable", back_populates="funds")
@@ -92,11 +99,24 @@ class UserMinerTable(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     telegram_id = Column(String, ForeignKey("user_table.telegram_id"), nullable=False)
     miner_id = Column(Integer, ForeignKey("miner_table.id"), nullable=False)
-    level = Column(Integer, default=0)
+    level = Column(Integer, default=1)  # Miner level, starts at 1
+    last_collection_time = Column(DateTime, default=datetime.utcnow)  # Last time gems were collected
 
     # Relationships
     user = relationship("UserTable", back_populates="miners")
     miner = relationship("MinerTable")
+
+# User Tap Mining Table
+class UserTapMiningTable(Base):
+    __tablename__ = "user_tap_mining_table"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    telegram_id = Column(String, ForeignKey("user_table.telegram_id"), nullable=False)
+    available_gems_to_mine = Column(Float, default=0.0)  # Gems available for the user to mine
+    last_tap_time = Column(DateTime, default=datetime.utcnow)  # Last time the user tapped to mine
+
+    # Relationships
+    user = relationship("UserTable", back_populates="tap_mining")
 
 # User Socials Table
 class UserSocialsTable(Base):
@@ -113,6 +133,11 @@ class UserSocialsTable(Base):
     instagram_username = Column(String)
     instagram_follow_verified = Column(VerificationStatus, default="no")
     telegram_follow_verified = Column(VerificationStatus, default="no")
+    x_access_token = Column(String)  # Added for API integration
+    yt_access_token = Column(String)  # Added for API integration
+    tiktok_access_token = Column(String)  # Added for API integration
+    instagram_access_token = Column(String)  # Added for API integration
+    telegram_access_token = Column(String)  # Added for API integration
 
     # Relationships
     user = relationship("UserTable", back_populates="socials")
@@ -128,6 +153,8 @@ class QuestTable(Base):
     link = Column(String)
     reward_amount = Column(Float, nullable=False)
     due_date = Column(DateTime)
+    repeatable = Column(Boolean, default=False)  # Whether the quest can be repeated
+    video_duration = Column(Float)  # Added for YouTube watch quests
 
 # User Quest Table (Links Users to Quests)
 class UserQuestTable(Base):
@@ -137,6 +164,8 @@ class UserQuestTable(Base):
     telegram_id = Column(String, ForeignKey("user_table.telegram_id"), nullable=False)
     quest_id = Column(Integer, ForeignKey("quest_table.id"), nullable=False)
     status = Column(QuestStatus, default="incomplete")
+    completion_time = Column(DateTime)  # Time when the quest was completed
+    start_time = Column(DateTime)  # Added for YouTube watch quests
 
     # Relationships
     user = relationship("UserTable", back_populates="quests")
@@ -150,6 +179,7 @@ class UserElderTable(Base):
     telegram_id = Column(String, ForeignKey("user_table.telegram_id"), nullable=False)
     elder_telegram_id = Column(String, nullable=False)
     elder_username = Column(String, nullable=False)
+    elder_since = Column(DateTime, default=datetime.utcnow)  # When the elder relationship was established
 
     # Relationships
     user = relationship("UserTable", back_populates="elder")
@@ -162,6 +192,33 @@ class UserMembersTable(Base):
     telegram_id = Column(String, ForeignKey("user_table.telegram_id"), nullable=False)
     member_telegram_id = Column(String, nullable=False)
     member_username = Column(String, nullable=False)
+    member_since = Column(DateTime, default=datetime.utcnow)  # When the member joined
 
     # Relationships
     user = relationship("UserTable", back_populates="members")
+
+# User Achievements Table
+class UserAchievementsTable(Base):
+    __tablename__ = "user_achievements_table"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    telegram_id = Column(String, ForeignKey("user_table.telegram_id"), nullable=False)
+    achievement_id = Column(Integer, nullable=False)  # ID of the achievement
+    achievement_name = Column(String, nullable=False)  # Name of the achievement
+    achieved_at = Column(DateTime, default=datetime.utcnow)  # When the achievement was unlocked
+
+    # Relationships
+    user = relationship("UserTable", back_populates="achievements")
+
+# User Notifications Table
+class UserNotificationsTable(Base):
+    __tablename__ = "user_notifications_table"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    telegram_id = Column(String, ForeignKey("user_table.telegram_id"), nullable=False)
+    message = Column(String, nullable=False)  # Notification message
+    created_at = Column(DateTime, default=datetime.utcnow)  # When the notification was created
+    read = Column(Boolean, default=False)  # Whether the notification has been read
+
+    # Relationships
+    user = relationship("UserTable", back_populates="notifications")
